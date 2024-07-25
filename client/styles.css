@@ -1,24 +1,64 @@
-body {
-    background-color: #f8f9fa;
-    padding-top: 20px;
-}
-
-.container {
-    max-width: 600px;
-    margin: auto;
+body.bg-discord-dark {
+    background-color: #36393f;
+    color: #ffffff;
 }
 
 .card {
+    background-color: #2f3136;
+    border: none;
+    border-radius: 8px;
     margin-bottom: 20px;
 }
 
-.modal-body img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
+.card-title, .card-text {
+    color: #ffffff;
 }
 
-button {
-    margin-top: 10px;
+.btn-primary {
+    background-color: #7289da;
+    border-color: #7289da;
+}
+
+.btn-primary:hover {
+    background-color: #5b6eae;
+    border-color: #5b6eae;
+}
+
+.btn-secondary {
+    background-color: #99aab5;
+    border-color: #99aab5;
+}
+
+.btn-secondary:hover {
+    background-color: #7289da;
+    border-color: #7289da;
+}
+
+.modal-content {
+    background-color: #2f3136;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+}
+
+.modal-header {
+    border-bottom: 1px solid #4f545c;
+}
+
+.modal-footer {
+    border-top: 1px solid #4f545c;
+}
+
+.dropdown-menu {
+    background-color: #2f3136;
+    border: 1px solid #4f545c;
+}
+
+.dropdown-item {
+    color: #ffffff;
+}
+
+.dropdown-item:hover {
+    background-color: #7289da;
+    color: #ffffff;
 }

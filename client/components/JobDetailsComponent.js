@@ -5,8 +5,8 @@ class JobDetailsComponent {
 
     render() {
         return `
-            <div class="modal" id="jobDetailsModal">
-                <div class="modal-dialog">
+            <div class="modal fade" id="jobDetailsModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">${this.job.company}</h5>
@@ -18,14 +18,17 @@ class JobDetailsComponent {
                             <p><strong>Pay:</strong> ${this.job.pay}</p>
                             <p><strong>Date Applied:</strong> ${this.job.dateApplied}</p>
                             <p><strong>Job Type:</strong> ${this.job.type}</p>
-                            <img src="${this.job.image}" class="img-fluid">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
         `;
+    }
+
+    addEventListeners() {
+        $('#jobDetailsModal').modal('show');
+        document.querySelector('#jobDetailsModal .close').addEventListener('click', () => {
+            $('#jobDetailsModal').modal('hide');
+        });
     }
 }

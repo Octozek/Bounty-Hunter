@@ -5,10 +5,10 @@ const jobSchema = new mongoose.Schema({
     company: { type: String, required: true },
     link: { type: String },
     pay: { type: String },
-    dateApplied: { type: Date },
-    type: { type: String },
-    image: { type: String },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    dateApplied: { type: Date, required: true },
+    type: { type: String }, // frontend, backend, fullstack
+    image: { type: String }, // URL to the image
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
 module.exports = mongoose.model('Job', jobSchema);

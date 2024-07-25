@@ -34,7 +34,7 @@ function attachFormHandlers() {
 
             // Handle login logic here
             try {
-                const response = await fetch('http://localhost:5000/api/users/login', { // Correct server URL
+                const response = await fetch('http://localhost:5000/api/users/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -49,7 +49,10 @@ function attachFormHandlers() {
 
                 // Store the token and redirect to the main component
                 localStorage.setItem('token', data.token);
-                app.innerHTML = new MainComponent().render();
+                const mainComponent = new MainComponent();
+                await mainComponent.fetchJobs();
+                document.getElementById('app').innerHTML = mainComponent.render();
+                mainComponent.addEventListeners();
             } catch (error) {
                 console.error('Error logging in:', error);
             }
@@ -69,7 +72,7 @@ function attachFormHandlers() {
 
             // Handle signup logic here
             try {
-                const response = await fetch('http://localhost:5000/api/users/signup', { // Correct server URL
+                const response = await fetch('http://localhost:5000/api/users/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -84,7 +87,10 @@ function attachFormHandlers() {
 
                 // Store the token and redirect to the main component
                 localStorage.setItem('token', data.token);
-                app.innerHTML = new MainComponent().render();
+                const mainComponent = new MainComponent();
+                await mainComponent.fetchJobs();
+                document.getElementById('app').innerHTML = mainComponent.render();
+                mainComponent.addEventListeners();
             } catch (error) {
                 console.error('Error signing up:', error);
             }
