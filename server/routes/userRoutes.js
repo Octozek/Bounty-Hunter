@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const auth = require('../middleware/auth');
 
 // Signup route
 router.post('/signup', async (req, res) => {
@@ -19,8 +20,8 @@ router.post('/signup', async (req, res) => {
         newUser.password = await bcrypt.hash(password, salt);
         await newUser.save();
 
-        const payload = { userId: newUser.id };
-        const token = jwt.sign(payload, 'secret', { expiresIn: '1h' });
+        const payload = { user: { id: newUser.id } };
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         res.json({ token });
     } catch (err) {
@@ -43,8 +44,8 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ msg: 'Invalid credentials' });
         }
 
-        const payload = { userId: user.id };
-        const token = jwt.sign(payload, 'secret', { expiresIn: '1h' });
+        const payload = { user: { id: user.id } };
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         res.json({ token });
     } catch (err) {

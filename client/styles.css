@@ -4,14 +4,17 @@ body.bg-discord-dark {
 }
 
 .card {
-    background-color: #2f3136;
+    background-color: #2f3136 !important;
     border: none;
     border-radius: 8px;
     margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
 }
 
-.card-title, .card-text {
-    color: #ffffff;
+.card-title, .card-text, .card-subtitle {
+    color: #ffffff !important;
 }
 
 .btn-primary {
@@ -35,8 +38,8 @@ body.bg-discord-dark {
 }
 
 .modal-content {
-    background-color: #2f3136;
-    color: #ffffff;
+    background-color: #2f3136 !important;
+    color: #ffffff !important;
     border: none;
     border-radius: 8px;
 }
@@ -50,12 +53,12 @@ body.bg-discord-dark {
 }
 
 .dropdown-menu {
-    background-color: #2f3136;
+    background-color: #2f3136 !important;
     border: 1px solid #4f545c;
 }
 
 .dropdown-item {
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 .dropdown-item:hover {

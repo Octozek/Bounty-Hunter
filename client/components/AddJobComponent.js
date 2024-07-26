@@ -14,19 +14,19 @@ class AddJobComponent {
                             <form id="add-job-form">
                                 <div class="form-group">
                                     <label for="company">Company Name</label>
-                                    <input type="text" class="form-control bg-dark text-light" id="company" required>
+                                    <input type="text" class="form-control" id="company" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="title">Job Title</label>
-                                    <input type="text" class="form-control bg-dark text-light" id="title" required>
+                                    <input type="text" class="form-control" id="title" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="pay">Pay</label>
-                                    <input type="text" class="form-control bg-dark text-light" id="pay">
+                                    <input type="text" class="form-control" id="pay">
                                 </div>
                                 <div class="form-group">
                                     <label for="type">Job Type</label>
-                                    <select class="form-control bg-dark text-light" id="type">
+                                    <select class="form-control" id="type">
                                         <option value="">Select</option>
                                         <option value="frontend">Frontend</option>
                                         <option value="backend">Backend</option>
@@ -35,11 +35,11 @@ class AddJobComponent {
                                 </div>
                                 <div class="form-group">
                                     <label for="dateApplied">Date Applied</label>
-                                    <input type="date" class="form-control bg-dark text-light" id="dateApplied" required>
+                                    <input type="date" class="form-control" id="dateApplied" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="link">Link</label>
-                                    <input type="url" class="form-control bg-dark text-light" id="link">
+                                    <input type="url" class="form-control" id="link">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Done!</button>
                             </form>
@@ -51,10 +51,6 @@ class AddJobComponent {
     }
 
     addEventListeners() {
-        $('#addJobModal').on('shown.bs.modal', function () {
-            $('#company').trigger('focus');
-        });
-
         document.getElementById('add-job-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const company = document.getElementById('company').value;
@@ -97,3 +93,6 @@ class AddJobComponent {
         });
     }
 }
+
+// Ensure AddJobComponent is accessible where it is needed
+// export default AddJobComponent;

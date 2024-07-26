@@ -19,15 +19,16 @@ class MainComponent {
 
         const deleteJobModal = this.renderDeleteJobModal();
         const addJobComponent = new AddJobComponent();
+        const headerComponent = new HeaderComponent();
 
         return `
             <div>
-                <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
-                    <h2>Welcome to Bounty Hunter</h2>
-                    <button class="btn btn-primary" id="add-job-btn" data-toggle="modal" data-target="#addJobModal">Add Job</button>
-                </div>
-                <div id="job-list" class="row">
-                    ${jobCards}
+                ${headerComponent.render()}
+                <div class="container">
+                    <button class="btn btn-primary mt-4 mb-4" id="add-job-btn" data-toggle="modal" data-target="#addJobModal">Add Job</button>
+                    <div id="job-list" class="row">
+                        ${jobCards}
+                    </div>
                 </div>
                 ${deleteJobModal}
                 ${addJobComponent.render()}
@@ -44,6 +45,9 @@ class MainComponent {
     }
 
     addEventListeners() {
+        const headerComponent = new HeaderComponent();
+        headerComponent.addEventListeners();
+
         document.getElementById('add-job-btn').addEventListener('click', () => {
             $('#addJobModal').modal('show');
         });
@@ -59,6 +63,16 @@ class MainComponent {
 
         const addJobComponent = new AddJobComponent();
         addJobComponent.addEventListeners();
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (event) => {
+            const dropdowns = document.querySelectorAll('.dropdown-menu');
+            dropdowns.forEach(dropdown => {
+                if (dropdown.style.display === 'block' && !dropdown.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        });
     }
 
     attachCardEventListeners() {
@@ -67,11 +81,15 @@ class MainComponent {
             cards.forEach(card => {
                 const dropdownToggle = card.querySelector('.dropdown-toggle');
                 const deleteJobBtn = card.querySelector('.delete-job-btn');
+                const addToDeclinedBtn = card.querySelector('.add-to-declined-btn');
 
                 if (dropdownToggle) {
                     dropdownToggle.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        $(e.target).next('.dropdown-menu').toggle();
+                        const dropdownMenu = e.target.nextElementSibling;
+                        if (dropdownMenu) {
+                            dropdownMenu.style.display = 'block';
+                        }
                     });
                 }
 
@@ -81,6 +99,15 @@ class MainComponent {
                         e.stopPropagation();
                         this.selectedJobId = e.target.dataset.id;
                         $('#deleteJobModal').modal('show');
+                    });
+                }
+
+                if (addToDeclinedBtn) {
+                    addToDeclinedBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const jobId = e.target.dataset.id;
+                        await this.addToDeclined(jobId);
                     });
                 }
 
@@ -142,6 +169,30 @@ class MainComponent {
         } catch (error) {
             console.error('Error deleting job:', error);
             alert(`There was an error deleting the job: ${error.message}. Please try again.`);
+        }
+    }
+
+    async addToDeclined(jobId) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:5000/api/jobs/${jobId}/decline`, {
+                method: 'PUT',
+                headers: {
+                    'x-auth-token': token
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.msg || 'Failed to decline job');
+            }
+
+            // Remove job from local list and update UI
+            this.jobs = this.jobs.filter(job => job._id !== jobId);
+            document.querySelector(`.card[data-id="${jobId}"]`).remove();
+        } catch (error) {
+            console.error('Error declining job:', error);
+            alert(`There was an error declining the job: ${error.message}. Please try again.`);
         }
     }
 }

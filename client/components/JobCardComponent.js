@@ -5,7 +5,7 @@ class JobCardComponent {
 
     render() {
         return `
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <div class="card mb-3" data-id="${this.job._id}">
                     <div class="card-body position-relative">
                         <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
@@ -13,8 +13,8 @@ class JobCardComponent {
                                 &bull;&bull;&bull;
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton${this.job._id}">
-                                <a class="dropdown-item delete-job-btn" href="#" data-id="${this.job._id}">Delete Job</a>
-                                <a class="dropdown-item" href="#">Add to Declined</a>
+                                <a class="dropdown-item delete-job-btn" href="#" data-id="${this.job._id}">Delete</a>
+                                <a class="dropdown-item add-to-declined-btn" href="#" data-id="${this.job._id}">Add to Declined</a>
                             </div>
                         </div>
                         <h5 class="card-title">${this.job.company}</h5>
