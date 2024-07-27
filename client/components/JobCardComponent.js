@@ -13,8 +13,9 @@ class JobCardComponent {
                                 &bull;&bull;&bull;
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton${this.job._id}">
-                                <a class="dropdown-item delete-job-btn" href="#" data-id="${this.job._id}">Delete</a>
+                                <a class="dropdown-item delete-job-btn" href="#" data-id="${this.job._id}">Delete Job</a>
                                 <a class="dropdown-item add-to-declined-btn" href="#" data-id="${this.job._id}">Add to Declined</a>
+                                <a class="dropdown-item add-to-achieved-btn" href="#" data-id="${this.job._id}">Add to Achieved</a>
                             </div>
                         </div>
                         <h5 class="card-title">${this.job.company}</h5>

@@ -1,6 +1,7 @@
 class DeclinedJobsComponent {
     constructor() {
         this.declinedJobs = [];
+        this.selectedJobId = null;
     }
 
     async fetchDeclinedJobs() {
@@ -14,7 +15,27 @@ class DeclinedJobsComponent {
     }
 
     render() {
-        const jobCards = this.declinedJobs.map(job => `
+        const headerComponent = new HeaderComponent('declined');
+        const jobCards = this.renderJobCards();
+        const deleteJobModal = this.renderDeleteJobModal();
+
+        return `
+            <div>
+                ${headerComponent.render()}
+                <div class="container mt-4">
+                    <h3>Declined Jobs</h3>
+                    <div id="job-list" class="row">
+                        ${jobCards}
+                    </div>
+                </div>
+                ${deleteJobModal}
+                <div id="job-details-modal-container"></div>
+            </div>
+        `;
+    }
+
+    renderJobCards() {
+        return this.declinedJobs.map(job => `
             <div class="col-md-12">
                 <div class="card mb-3" data-id="${job._id}">
                     <div class="card-body position-relative">
@@ -23,7 +44,7 @@ class DeclinedJobsComponent {
                                 &bull;&bull;&bull;
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton${job._id}">
-                                <a class="dropdown-item delete-job-btn" href="#" data-id="${job._id}">Delete Job</a>
+                                <a class="dropdown-item delete-job-btn" href="#" data-id="${job._id}">Delete</a>
                             </div>
                         </div>
                         <h5 class="card-title">${job.company}</h5>
@@ -33,23 +54,10 @@ class DeclinedJobsComponent {
                 </div>
             </div>
         `).join('');
-
-        const headerComponent = new HeaderComponent();
-
-        return `
-            <div>
-                ${headerComponent.render()}
-                <div class="container">
-                    <div id="job-list" class="row">
-                        ${jobCards}
-                    </div>
-                </div>
-            </div>
-        `;
     }
 
     addEventListeners() {
-        const headerComponent = new HeaderComponent();
+        const headerComponent = new HeaderComponent('declined');
         headerComponent.addEventListeners();
 
         this.attachCardEventListeners();
@@ -63,6 +71,13 @@ class DeclinedJobsComponent {
                 }
             });
         });
+
+        document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
+            if (this.selectedJobId) {
+                await this.deleteJob(this.selectedJobId);
+                $('#deleteJobModal').modal('hide');
+            }
+        });
     }
 
     attachCardEventListeners() {
@@ -75,10 +90,7 @@ class DeclinedJobsComponent {
                 if (dropdownToggle) {
                     dropdownToggle.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        const dropdownMenu = e.target.nextElementSibling;
-                        if (dropdownMenu) {
-                            dropdownMenu.style.display = 'block';
-                        }
+                        $(e.target).next('.dropdown-menu').toggle();
                     });
                 }
 
@@ -101,6 +113,54 @@ class DeclinedJobsComponent {
                     }
                 });
             });
+        }
+    }
+
+    renderDeleteJobModal() {
+        return `
+            <div class="modal fade" id="deleteJobModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Confirm Deletion</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete this job?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-danger" id="confirm-delete-btn">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    async deleteJob(jobId) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:5000/api/jobs/${jobId}`, {
+                method: 'DELETE',
+                headers: {
+                    'x-auth-token': token
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.msg || 'Failed to delete job');
+            }
+
+            // Remove job from local list and update UI
+            this.declinedJobs = this.declinedJobs.filter(job => job._id !== jobId);
+            document.querySelector(`.card[data-id="${jobId}"]`).remove();
+        } catch (error) {
+            console.error('Error deleting job:', error);
+            alert(`There was an error deleting the job: ${error.message}. Please try again.`);
         }
     }
 }

@@ -1,70 +1,66 @@
-class MainComponent {
+class AchievedJobsComponent {
     constructor() {
-        this.jobs = [];
+        this.achievedJobs = [];
         this.selectedJobId = null;
     }
 
-    async fetchJobs() {
+    async fetchAchievedJobs() {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/jobs', {
+        const response = await fetch('http://localhost:5000/api/jobs/achieved', {
             headers: {
                 'x-auth-token': token
             }
         });
-        this.jobs = await response.json();
+        this.achievedJobs = await response.json();
     }
 
     render() {
-        const headerComponent = new HeaderComponent('pending');
+        const headerComponent = new HeaderComponent('achieved');
         const jobCards = this.renderJobCards();
         const deleteJobModal = this.renderDeleteJobModal();
-        const addJobComponent = new AddJobComponent();
 
         return `
             <div>
                 ${headerComponent.render()}
                 <div class="container mt-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3>Pending Jobs</h3>
-                        <button class="btn btn-primary discord-btn" id="add-job-btn" data-toggle="modal" data-target="#addJobModal">Add Job</button>
-                    </div>
+                    <h3>Achieved Jobs</h3>
                     <div id="job-list" class="row">
                         ${jobCards}
                     </div>
                 </div>
                 ${deleteJobModal}
-                ${addJobComponent.render()}
                 <div id="job-details-modal-container"></div>
             </div>
         `;
     }
 
     renderJobCards() {
-        return this.jobs.map(job => {
-            const jobCardComponent = new JobCardComponent(job);
-            return jobCardComponent.render();
-        }).join('');
+        return this.achievedJobs.map(job => `
+            <div class="col-md-12">
+                <div class="card mb-3" data-id="${job._id}">
+                    <div class="card-body position-relative">
+                        <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton${job._id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                &bull;&bull;&bull;
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton${job._id}">
+                                <a class="dropdown-item delete-job-btn" href="#" data-id="${job._id}">Delete</a>
+                            </div>
+                        </div>
+                        <h5 class="card-title">${job.company}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">${job.title}</h6>
+                        <p class="card-text"><small>${new Date(job.dateApplied).toLocaleDateString()}</small></p>
+                    </div>
+                </div>
+            </div>
+        `).join('');
     }
 
     addEventListeners() {
-        document.getElementById('add-job-btn').addEventListener('click', () => {
-            $('#addJobModal').modal('show');
-        });
-
-        const headerComponent = new HeaderComponent('pending');
+        const headerComponent = new HeaderComponent('achieved');
         headerComponent.addEventListeners();
 
         this.attachCardEventListeners();
-
-        document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
-            if (this.selectedJobId) {
-                await this.deleteJob(this.selectedJobId);
-                $('#deleteJobModal').modal('hide');
-            }
-        });
-
-        const addJobComponent = new AddJobComponent();
-        addJobComponent.addEventListeners();
 
         // Close dropdown when clicking outside
         document.addEventListener('click', (event) => {
@@ -75,6 +71,13 @@ class MainComponent {
                 }
             });
         });
+
+        document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
+            if (this.selectedJobId) {
+                await this.deleteJob(this.selectedJobId);
+                $('#deleteJobModal').modal('hide');
+            }
+        });
     }
 
     attachCardEventListeners() {
@@ -83,16 +86,11 @@ class MainComponent {
             cards.forEach(card => {
                 const dropdownToggle = card.querySelector('.dropdown-toggle');
                 const deleteJobBtn = card.querySelector('.delete-job-btn');
-                const addToDeclinedBtn = card.querySelector('.add-to-declined-btn');
-                const addToAchievedBtn = card.querySelector('.add-to-achieved-btn');
 
                 if (dropdownToggle) {
                     dropdownToggle.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        const dropdownMenu = e.target.nextElementSibling;
-                        if (dropdownMenu) {
-                            dropdownMenu.style.display = 'block';
-                        }
+                        $(e.target).next('.dropdown-menu').toggle();
                     });
                 }
 
@@ -105,28 +103,10 @@ class MainComponent {
                     });
                 }
 
-                if (addToDeclinedBtn) {
-                    addToDeclinedBtn.addEventListener('click', async (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const jobId = e.target.dataset.id;
-                        await this.addToDeclined(jobId);
-                    });
-                }
-
-                if (addToAchievedBtn) {
-                    addToAchievedBtn.addEventListener('click', async (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const jobId = e.target.dataset.id;
-                        await this.addToAchieved(jobId);
-                    });
-                }
-
                 card.addEventListener('click', (e) => {
                     if (!e.target.classList.contains('dropdown-toggle') && !e.target.classList.contains('delete-job-btn')) {
                         const jobId = e.currentTarget.dataset.id;
-                        const job = this.jobs.find(job => job._id === jobId);
+                        const job = this.achievedJobs.find(job => job._id === jobId);
                         const jobDetailsComponent = new JobDetailsComponent(job);
                         document.getElementById('job-details-modal-container').innerHTML = jobDetailsComponent.render();
                         jobDetailsComponent.addEventListeners();
@@ -176,59 +156,11 @@ class MainComponent {
             }
 
             // Remove job from local list and update UI
-            this.jobs = this.jobs.filter(job => job._id !== jobId);
+            this.achievedJobs = this.achievedJobs.filter(job => job._id !== jobId);
             document.querySelector(`.card[data-id="${jobId}"]`).remove();
         } catch (error) {
             console.error('Error deleting job:', error);
             alert(`There was an error deleting the job: ${error.message}. Please try again.`);
-        }
-    }
-
-    async addToDeclined(jobId) {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/jobs/${jobId}/decline`, {
-                method: 'PUT',
-                headers: {
-                    'x-auth-token': token
-                }
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.msg || 'Failed to decline job');
-            }
-
-            // Remove job from local list and update UI
-            this.jobs = this.jobs.filter(job => job._id !== jobId);
-            document.querySelector(`.card[data-id="${jobId}"]`).remove();
-        } catch (error) {
-            console.error('Error declining job:', error);
-            alert(`There was an error declining the job: ${error.message}. Please try again.`);
-        }
-    }
-
-    async addToAchieved(jobId) {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/jobs/${jobId}/achieve`, {
-                method: 'PUT',
-                headers: {
-                    'x-auth-token': token
-                }
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.msg || 'Failed to achieve job');
-            }
-
-            // Remove job from local list and update UI
-            this.jobs = this.jobs.filter(job => job._id !== jobId);
-            document.querySelector(`.card[data-id="${jobId}"]`).remove();
-        } catch (error) {
-            console.error('Error achieving job:', error);
-            alert(`There was an error achieving the job: ${error.message}. Please try again.`);
         }
     }
 }

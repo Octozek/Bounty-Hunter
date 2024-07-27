@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const JobSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
-        required: true
+        ref: 'users'
     },
     company: {
         type: String,
@@ -17,17 +16,21 @@ const JobSchema = new mongoose.Schema({
     pay: {
         type: String
     },
-    type: {
-        type: String
-    },
     dateApplied: {
         type: Date,
         required: true
+    },
+    type: {
+        type: String
     },
     link: {
         type: String
     },
     declined: {
+        type: Boolean,
+        default: false
+    },
+    achieved: {
         type: Boolean,
         default: false
     }

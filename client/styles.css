@@ -65,3 +65,8 @@ body.bg-discord-dark {
     background-color: #7289da;
     color: #ffffff;
 }
+
+.discord-btn.active {
+    background-color: #4f545c;
+    border-color: #34383d;
+}
