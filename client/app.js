@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function attachFormHandlers() {
     console.log('Attaching form handlers...');
 
+    const API_BASE_URL = 'https://your-render-url.onrender.com'; // Replace with your actual Render URL
+
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         console.log('Login form found');
@@ -34,7 +36,7 @@ function attachFormHandlers() {
 
             // Handle login logic here
             try {
-                const response = await fetch('http://localhost:5000/api/users/login', {
+                const response = await fetch(`${API_BASE_URL}/api/users/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -72,7 +74,7 @@ function attachFormHandlers() {
 
             // Handle signup logic here
             try {
-                const response = await fetch('http://localhost:5000/api/users/signup', {
+                const response = await fetch(`${API_BASE_URL}/api/users/signup`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
