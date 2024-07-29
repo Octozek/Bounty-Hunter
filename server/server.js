@@ -1,4 +1,3 @@
-// server/server.js
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -14,7 +13,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
-app.use(cors({ origin: 'http://127.0.0.1:8080' }));
+app.use(cors({
+    origin: 'https://bounty-hunter-mfbg.onrender.com' // Update with your actual frontend URL
+}));
 
 // Mongoose connection
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
