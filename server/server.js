@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
 app.use(cors({
-    origin: 'https://bounty-hunter-mfbg.onrender.com' // Update with your actual frontend URL
+    origin: 'https://bounty-hunter-mfbg.onrender.com' // Replace with your actual frontend URL
 }));
 
 // Mongoose connection
