@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const JobSchema = new mongoose.Schema({
+const JobSchema = new Schema({
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'users'
     },
     company: {
@@ -26,6 +27,9 @@ const JobSchema = new mongoose.Schema({
     link: {
         type: String
     },
+    notes: {
+        type: String
+    },
     declined: {
         type: Boolean,
         default: false
@@ -36,4 +40,4 @@ const JobSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('job', JobSchema);
+module.exports = mongoose.model('Job', JobSchema);

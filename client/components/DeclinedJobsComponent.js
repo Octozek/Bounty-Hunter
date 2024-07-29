@@ -1,7 +1,9 @@
 class DeclinedJobsComponent {
     constructor() {
         this.declinedJobs = [];
+        this.filteredDeclinedJobs = [];
         this.selectedJobId = null;
+        this.showSearchOptions = false;
     }
 
     async fetchDeclinedJobs() {
@@ -12,6 +14,7 @@ class DeclinedJobsComponent {
             }
         });
         this.declinedJobs = await response.json();
+        this.filteredDeclinedJobs = this.declinedJobs;
     }
 
     render() {
@@ -23,7 +26,29 @@ class DeclinedJobsComponent {
             <div>
                 ${headerComponent.render()}
                 <div class="container mt-4">
-                    <h3>Declined Jobs</h3>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3>Declined Jobs</h3>
+                    </div>
+                    <div class="mb-4">
+                        <button class="btn btn-secondary discord-btn" id="toggle-search-btn">Toggle Search Options</button>
+                        <div id="search-options" class="p-3 rounded" style="display: none; background-color: #2f3136; border: 1px solid #4f545c;">
+                            <div class="form-group">
+                                <label for="search-name">Search by Name:</label>
+                                <input type="text" id="search-name" class="form-control mb-3" placeholder="Enter company or job title">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="search-start-date">Start Date:</label>
+                                    <input type="date" id="search-start-date" class="form-control">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="search-end-date">End Date:</label>
+                                    <input type="date" id="search-end-date" class="form-control">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary discord-btn" id="search-btn">Search</button>
+                        </div>
+                    </div>
                     <div id="job-list" class="row">
                         ${jobCards}
                     </div>
@@ -35,7 +60,7 @@ class DeclinedJobsComponent {
     }
 
     renderJobCards() {
-        return this.declinedJobs.map(job => `
+        return this.filteredDeclinedJobs.map(job => `
             <div class="col-md-12">
                 <div class="card mb-3" data-id="${job._id}">
                     <div class="card-body position-relative">
@@ -44,7 +69,7 @@ class DeclinedJobsComponent {
                                 &bull;&bull;&bull;
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton${job._id}">
-                                <a class="dropdown-item delete-job-btn" href="#" data-id="${job._id}">Delete</a>
+                                <a class="dropdown-item delete-job-btn" href="#" data-id="${job._id}">Delete Job</a>
                             </div>
                         </div>
                         <h5 class="card-title">${job.company}</h5>
@@ -57,8 +82,29 @@ class DeclinedJobsComponent {
     }
 
     addEventListeners() {
-        const headerComponent = new HeaderComponent('declined');
-        headerComponent.addEventListeners();
+        document.getElementById('pending-btn').addEventListener('click', async () => {
+            const mainComponent = new MainComponent();
+            await mainComponent.fetchJobs();
+            document.getElementById('app').innerHTML = mainComponent.render();
+            mainComponent.addEventListeners();
+        });
+
+        document.getElementById('achieved-btn').addEventListener('click', async () => {
+            const achievedJobsComponent = new AchievedJobsComponent();
+            await achievedJobsComponent.fetchAchievedJobs();
+            document.getElementById('app').innerHTML = achievedJobsComponent.render();
+            achievedJobsComponent.addEventListeners();
+        });
+
+        document.getElementById('toggle-search-btn').addEventListener('click', () => {
+            const searchOptions = document.getElementById('search-options');
+            this.showSearchOptions = !this.showSearchOptions;
+            searchOptions.style.display = this.showSearchOptions ? 'block' : 'none';
+        });
+
+        document.getElementById('search-btn').addEventListener('click', () => {
+            this.filterJobs();
+        });
 
         this.attachCardEventListeners();
 
@@ -106,7 +152,7 @@ class DeclinedJobsComponent {
                 card.addEventListener('click', (e) => {
                     if (!e.target.classList.contains('dropdown-toggle') && !e.target.classList.contains('delete-job-btn')) {
                         const jobId = e.currentTarget.dataset.id;
-                        const job = this.declinedJobs.find(job => job._id === jobId);
+                        const job = this.filteredDeclinedJobs.find(job => job._id === jobId);
                         const jobDetailsComponent = new JobDetailsComponent(job);
                         document.getElementById('job-details-modal-container').innerHTML = jobDetailsComponent.render();
                         jobDetailsComponent.addEventListeners();
@@ -157,10 +203,29 @@ class DeclinedJobsComponent {
 
             // Remove job from local list and update UI
             this.declinedJobs = this.declinedJobs.filter(job => job._id !== jobId);
+            this.filteredDeclinedJobs = this.filteredDeclinedJobs.filter(job => job._id !== jobId);
             document.querySelector(`.card[data-id="${jobId}"]`).remove();
         } catch (error) {
             console.error('Error deleting job:', error);
             alert(`There was an error deleting the job: ${error.message}. Please try again.`);
         }
+    }
+
+    filterJobs() {
+        const searchName = document.getElementById('search-name').value.toLowerCase();
+        const searchStartDate = document.getElementById('search-start-date').value;
+        const searchEndDate = document.getElementById('search-end-date').value;
+
+        this.filteredDeclinedJobs = this.declinedJobs.filter(job => {
+            const jobNameMatch = job.company.toLowerCase().includes(searchName) || job.title.toLowerCase().includes(searchName);
+            const jobDate = new Date(job.dateApplied);
+            const startDate = searchStartDate ? new Date(searchStartDate) : null;
+            const endDate = searchEndDate ? new Date(searchEndDate) : null;
+            const jobDateMatch = (!startDate || jobDate >= startDate) && (!endDate || jobDate <= endDate);
+            return jobNameMatch && jobDateMatch;
+        });
+
+        document.getElementById('job-list').innerHTML = this.renderJobCards();
+        this.attachCardEventListeners();
     }
 }

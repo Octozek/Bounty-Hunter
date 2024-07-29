@@ -1,4 +1,3 @@
-/* General Styles */
 body.bg-discord-dark {
     background-color: #36393f;
     color: #ffffff;
@@ -67,38 +66,35 @@ body.bg-discord-dark {
     color: #ffffff;
 }
 
-/* Header Styles */
-.discord-header {
-    background-color: #2f3136;
-    padding: 10px 20px;
-}
-
-.discord-title {
-    color: #ffffff;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.discord-header-buttons .btn {
-    margin-left: 10px;
-    background-color: #7289da;
-    border-color: #7289da;
-}
-
-.discord-header-buttons .btn.active {
+.discord-btn.active {
     background-color: #4f545c;
     border-color: #34383d;
 }
 
-
-.input-group .form-control {
+#search-options {
+    padding: 10px;
     background-color: #2f3136;
     border: 1px solid #4f545c;
-    color: #ffffff;
+    border-radius: 8px;
 }
 
-.input-group .form-control:focus {
-    background-color: #2f3136;
-    border: 1px solid #7289da;
+#search-options .form-group {
+    margin-bottom: 15px;
+}
+
+#search-options label {
+    font-weight: bold;
+}
+
+#search-options .form-control {
+    background-color: #3c3f44;
     color: #ffffff;
+    border: 1px solid #4f545c;
+}
+
+#search-options .form-control:focus {
+    background-color: #3c3f44;
+    color: #ffffff;
+    border: 1px solid #7289da;
+    box-shadow: none;
 }

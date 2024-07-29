@@ -41,6 +41,10 @@ class AddJobComponent {
                                     <label for="link">Link</label>
                                     <input type="url" class="form-control" id="link">
                                 </div>
+                                <div class="form-group">
+                                    <label for="notes">Notes</label>
+                                    <textarea class="form-control" id="notes" rows="3"></textarea>
+                                </div>
                                 <button type="submit" class="btn btn-primary">Done!</button>
                             </form>
                         </div>
@@ -59,8 +63,9 @@ class AddJobComponent {
             const dateApplied = document.getElementById('dateApplied').value;
             const type = document.getElementById('type').value;
             const link = document.getElementById('link').value;
+            const notes = document.getElementById('notes').value;
 
-            const job = { company, title, pay, dateApplied, type, link };
+            const job = { company, title, pay, dateApplied, type, link, notes };
             const token = localStorage.getItem('token');
 
             try {
@@ -93,6 +98,3 @@ class AddJobComponent {
         });
     }
 }
-
-// Ensure AddJobComponent is accessible where it is needed
-// export default AddJobComponent;

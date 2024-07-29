@@ -18,6 +18,7 @@ class JobDetailsComponent {
                             <p><strong>Pay:</strong> ${this.job.pay}</p>
                             <p><strong>Date Applied:</strong> ${this.job.dateApplied}</p>
                             <p><strong>Job Type:</strong> ${this.job.type}</p>
+                            <p><strong>Notes:</strong> ${this.job.notes}</p>
                         </div>
                     </div>
                 </div>

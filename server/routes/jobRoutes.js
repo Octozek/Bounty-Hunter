@@ -13,17 +13,6 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
-// Fetch all declined jobs
-router.get('/declined', auth, async (req, res) => {
-    try {
-        const jobs = await Job.find({ userId: req.user.id, declined: true });
-        res.json(jobs);
-    } catch (err) {
-        console.error('Error fetching declined jobs:', err);
-        res.status(500).json({ msg: 'Server error' });
-    }
-});
-
 // Fetch all achieved jobs
 router.get('/achieved', auth, async (req, res) => {
     try {
@@ -35,9 +24,20 @@ router.get('/achieved', auth, async (req, res) => {
     }
 });
 
+// Fetch all declined jobs
+router.get('/declined', auth, async (req, res) => {
+    try {
+        const jobs = await Job.find({ userId: req.user.id, declined: true });
+        res.json(jobs);
+    } catch (err) {
+        console.error('Error fetching declined jobs:', err);
+        res.status(500).json({ msg: 'Server error' });
+    }
+});
+
 // Add new job
 router.post('/', auth, async (req, res) => {
-    const { company, title, pay, dateApplied, type, link } = req.body;
+    const { company, title, pay, dateApplied, type, link, notes } = req.body;
 
     try {
         const newJob = new Job({
@@ -47,12 +47,14 @@ router.post('/', auth, async (req, res) => {
             pay,
             dateApplied,
             type,
-            link
+            link,
+            notes
         });
 
         const job = await newJob.save();
         res.json(job);
     } catch (err) {
+        console.error('Error adding job:', err);
         res.status(500).json({ msg: 'Server error' });
     }
 });

@@ -3,7 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-require('dotenv').config(); // Load environment variables
+require('dotenv').config();
 
 const userRoutes = require('./routes/userRoutes');
 const jobRoutes = require('./routes/jobRoutes');
@@ -16,7 +16,8 @@ app.use(bodyParser.json());
 app.use(cors({ origin: 'http://127.0.0.1:8080' }));
 
 // Mongoose connection
-mongoose.connect('mongodb://localhost:27017/bountyhunter', { useNewUrlParser: true, useUnifiedTopology: true })
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/bountyhunter';
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 

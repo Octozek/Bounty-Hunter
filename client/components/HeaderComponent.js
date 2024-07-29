@@ -5,13 +5,13 @@ class HeaderComponent {
 
     render() {
         return `
-            <header class="discord-header d-flex justify-content-between align-items-center p-3">
-                <h2 class="discord-title">Bounty Hunter</h2>
-                <div class="discord-header-buttons">
-                    <button class="btn btn-primary discord-btn ${this.activePage === 'pending' ? 'active' : ''}" id="pending-btn">Pending Jobs</button>
-                    <button class="btn btn-primary discord-btn ${this.activePage === 'declined' ? 'active' : ''}" id="declined-btn">Declined Jobs</button>
-                    <button class="btn btn-primary discord-btn ${this.activePage === 'achieved' ? 'active' : ''}" id="achieved-btn">Achieved Jobs</button>
-                </div>
+            <header class="d-flex justify-content-between align-items-center p-3 bg-discord-dark text-white">
+                <h2>Bounty Hunter</h2>
+                <nav>
+                    <button class="btn btn-secondary discord-btn ${this.activePage === 'pending' ? 'active' : ''}" id="pending-btn">Pending Jobs</button>
+                    <button class="btn btn-secondary discord-btn ${this.activePage === 'declined' ? 'active' : ''}" id="declined-btn">Declined Jobs</button>
+                    <button class="btn btn-secondary discord-btn ${this.activePage === 'achieved' ? 'active' : ''}" id="achieved-btn">Achieved Jobs</button>
+                </nav>
             </header>
         `;
     }
