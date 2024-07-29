@@ -1,3 +1,4 @@
+// server/server.js
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -16,8 +17,7 @@ app.use(bodyParser.json());
 app.use(cors({ origin: 'http://127.0.0.1:8080' }));
 
 // Mongoose connection
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/bountyhunter';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 
