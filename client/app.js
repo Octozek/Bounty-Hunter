@@ -1,5 +1,3 @@
-const BASE_URL = 'https://bounty-hunter-mfbg.onrender.com';
-
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
     const loginComponent = new LoginComponent();
@@ -36,7 +34,7 @@ function attachFormHandlers() {
 
             // Handle login logic here
             try {
-                const response = await fetch(`${BASE_URL}/api/users/login`, {
+                const response = await fetch(`${config.apiUrl}/users/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -74,7 +72,7 @@ function attachFormHandlers() {
 
             // Handle signup logic here
             try {
-                const response = await fetch(`${BASE_URL}/api/users/signup`, {
+                const response = await fetch(`${config.apiUrl}/users/signup`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
