@@ -1,4 +1,4 @@
-import config from './config.js';
+const config = require('./config.js');
 
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
