@@ -1,8 +1,7 @@
-const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
+const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const userRoutes = require('./routes/userRoutes');
@@ -10,15 +9,18 @@ const jobRoutes = require('./routes/jobRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 
 app.use(bodyParser.json());
-app.use(cors({ origin: 'https://bounty-hunter-mfbg.onrender.com' }));
+app.use(cors({ origin: '*' }));
 
 // Mongoose connection
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true // This line solves the deprecation warning
+}).then(() => console.log('MongoDB connected'))
+.catch(err => console.error('MongoDB connection error:', err));
 
 // Serve the uploads directory statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

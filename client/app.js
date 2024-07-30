@@ -1,5 +1,3 @@
-import { config } from './config.js';
-
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
     const loginComponent = new LoginComponent();
@@ -24,6 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function attachFormHandlers() {
     console.log('Attaching form handlers...');
+
+    const config = {
+        apiUrl: 'https://bounty-hunter-mfbg.onrender.com/api'
+    };
 
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
