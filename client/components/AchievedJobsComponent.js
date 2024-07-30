@@ -8,14 +8,18 @@ class AchievedJobsComponent {
 
     async fetchAchievedJobs() {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/jobs/achieved', {
+        const response = await fetch(`${window.config.apiUrl}/jobs/achieved`, {
             headers: {
                 'x-auth-token': token
             }
         });
+        if (!response.ok) {
+            throw new Error('Failed to fetch achieved jobs');
+        }
         this.achievedJobs = await response.json();
         this.filteredAchievedJobs = this.achievedJobs;
     }
+    
 
     render() {
         const headerComponent = new HeaderComponent('achieved');

@@ -8,14 +8,18 @@ class DeclinedJobsComponent {
 
     async fetchDeclinedJobs() {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/jobs/declined', {
+        const response = await fetch(`${window.config.apiUrl}/jobs/declined`, {
             headers: {
                 'x-auth-token': token
             }
         });
+        if (!response.ok) {
+            throw new Error('Failed to fetch declined jobs');
+        }
         this.declinedJobs = await response.json();
         this.filteredDeclinedJobs = this.declinedJobs;
     }
+    
 
     render() {
         const headerComponent = new HeaderComponent('declined');

@@ -8,14 +8,18 @@ class MainComponent {
 
     async fetchJobs() {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${config.apiUrl}/jobs`, {
+        const response = await fetch(`${window.config.apiUrl}/jobs`, {
             headers: {
                 'x-auth-token': token
             }
         });
+        if (!response.ok) {
+            throw new Error('Failed to fetch jobs');
+        }
         this.jobs = await response.json();
         this.filteredJobs = this.jobs;
     }
+    
 
     render() {
         const headerComponent = new HeaderComponent('pending');
