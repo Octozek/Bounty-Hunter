@@ -117,8 +117,10 @@ router.delete('/:id', auth, async (req, res) => {
         res.json({ msg: 'Job removed' });
     } catch (err) {
         console.error('Error deleting job:', err);
-        res.status(500).json({ msg: 'Server error' });
+        res.status(500).json({ msg: 'Server error', error: err.message });
     }
 });
+
+
 
 module.exports = router;

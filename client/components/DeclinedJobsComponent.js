@@ -215,6 +215,7 @@ class DeclinedJobsComponent {
         }
     }
     
+    
 
     filterJobs() {
         const searchName = document.getElementById('search-name').value.toLowerCase();
