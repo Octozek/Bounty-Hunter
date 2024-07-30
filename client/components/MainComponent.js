@@ -8,7 +8,7 @@ class MainComponent {
 
     async fetchJobs() {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/jobs', {
+        const response = await fetch(`${config.apiUrl}/jobs`, {
             headers: {
                 'x-auth-token': token
             }
@@ -196,7 +196,7 @@ class MainComponent {
     async deleteJob(jobId) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/jobs/${jobId}`, {
+            const response = await fetch(`${config.apiUrl}/jobs/${jobId}`, {
                 method: 'DELETE',
                 headers: {
                     'x-auth-token': token
@@ -220,7 +220,7 @@ class MainComponent {
     async addToDeclined(jobId) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/jobs/${jobId}/decline`, {
+            const response = await fetch(`${config.apiUrl}/jobs/${jobId}/decline`, {
                 method: 'PUT',
                 headers: {
                     'x-auth-token': token
@@ -244,7 +244,7 @@ class MainComponent {
     async addToAchieved(jobId) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/jobs/${jobId}/achieve`, {
+            const response = await fetch(`${config.apiUrl}/jobs/${jobId}/achieve`, {
                 method: 'PUT',
                 headers: {
                     'x-auth-token': token
