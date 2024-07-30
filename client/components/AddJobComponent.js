@@ -69,7 +69,8 @@ class AddJobComponent {
             const token = localStorage.getItem('token');
 
             try {
-                const response = await fetch('http://localhost:5000/api/jobs', {
+                console.log('Sending job data to server:', job);
+                const response = await fetch(`${config.apiUrl}/jobs`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
