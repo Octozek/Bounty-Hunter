@@ -34,7 +34,7 @@ function attachFormHandlers() {
 
             // Handle login logic here
             try {
-                const response = await fetch(`${window.config.apiUrl}/users/login`, {
+                const response = await fetch(`${config.apiUrl}/users/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ function attachFormHandlers() {
 
             // Handle signup logic here
             try {
-                const response = await fetch(`${window.config.apiUrl}/users/signup`, {
+                const response = await fetch(`${config.apiUrl}/users/signup`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

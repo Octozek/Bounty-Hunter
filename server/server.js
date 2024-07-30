@@ -1,5 +1,3 @@
-// server/server.js
-
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -15,7 +13,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
-app.use(cors({ origin: '*' })); // Allow all origins, adjust as needed for security
+app.use(cors({ origin: 'https://bounty-hunter-mfbg.onrender.com' }));
 
 // Mongoose connection
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
