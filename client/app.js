@@ -1,5 +1,3 @@
-const config = require('./config.js');
-
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
     const loginComponent = new LoginComponent();
