@@ -23,10 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function attachFormHandlers() {
     console.log('Attaching form handlers...');
 
-    const config = {
-        apiUrl: 'https://bounty-hunter-mfbg.onrender.com/api'
-    };
-
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         console.log('Login form found');

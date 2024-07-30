@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const path = require('path'); // Add this line
+const path = require('path');
 require('dotenv').config();
 
 const userRoutes = require('./routes/userRoutes');
@@ -13,7 +13,7 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 app.use(bodyParser.json());
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: '*' }));  // This allows all origins
 
 // Mongoose connection
 mongoose.connect(process.env.MONGODB_URI, {
