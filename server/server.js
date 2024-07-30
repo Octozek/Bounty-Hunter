@@ -13,13 +13,13 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 app.use(bodyParser.json());
-app.use(cors({ origin: '*' }));  // This allows all origins
+app.use(cors({ origin: '*' }));  // Allow all origins for simplicity
 
 // Mongoose connection
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true // This line solves the deprecation warning
+    useCreateIndex: true  // Resolve deprecation warning
 }).then(() => console.log('MongoDB connected'))
 .catch(err => console.error('MongoDB connection error:', err));
 
