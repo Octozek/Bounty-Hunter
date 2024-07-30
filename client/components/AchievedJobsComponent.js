@@ -193,7 +193,7 @@ class AchievedJobsComponent {
     async deleteJob(jobId) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/jobs/${jobId}`, {
+            const response = await fetch(`${config.apiUrl}/jobs/${jobId}`, {
                 method: 'DELETE',
                 headers: {
                     'x-auth-token': token

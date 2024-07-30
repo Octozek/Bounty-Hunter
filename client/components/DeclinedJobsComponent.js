@@ -193,18 +193,18 @@ class DeclinedJobsComponent {
     async deleteJob(jobId) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/jobs/${jobId}`, {
+            const response = await fetch(`${config.apiUrl}/jobs/${jobId}`, {
                 method: 'DELETE',
                 headers: {
                     'x-auth-token': token
                 }
             });
-
+    
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.msg || 'Failed to delete job');
             }
-
+    
             // Remove job from local list and update UI
             this.declinedJobs = this.declinedJobs.filter(job => job._id !== jobId);
             this.filteredDeclinedJobs = this.filteredDeclinedJobs.filter(job => job._id !== jobId);
@@ -214,6 +214,7 @@ class DeclinedJobsComponent {
             alert(`There was an error deleting the job: ${error.message}. Please try again.`);
         }
     }
+    
 
     filterJobs() {
         const searchName = document.getElementById('search-name').value.toLowerCase();
