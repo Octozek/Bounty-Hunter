@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
 const express = require('express');
-const cors = require('cors');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
@@ -10,18 +10,15 @@ const jobRoutes = require('./routes/jobRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
-app.use(cors({ origin: '*' }));  // Allow all origins for simplicity
+app.use(cors());
 
 // Mongoose connection
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true  // Resolve deprecation warning
-}).then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));
 
 // Serve the uploads directory statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
