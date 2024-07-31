@@ -5,7 +5,18 @@ const userRoutes = require('./routes/userRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const path = require('path');
 
+const fs = require('fs');
+
+if (fs.existsSync('.env')) {
+    console.log('.env file exists');
+} else {
+    console.log('.env file does not exist');
+}
+
 dotenv.config();
+
+console.log('MONGODB_URI:', process.env.MONGODB_URI); // Debug log
+console.log('JWT_SECRET:', process.env.JWT_SECRET); // Debug log
 
 const app = express();
 const PORT = process.env.PORT || 5000;

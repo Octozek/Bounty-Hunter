@@ -19,7 +19,6 @@ class MainComponent {
         this.jobs = await response.json();
         this.filteredJobs = this.jobs;
     }
-    
 
     render() {
         const headerComponent = new HeaderComponent('pending');
@@ -28,43 +27,50 @@ class MainComponent {
         const addJobComponent = new AddJobComponent();
 
         return `
-            <div>
-                ${headerComponent.render()}
-                <div class="container mt-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3>Pending Jobs</h3>
-                        <button class="btn btn-primary discord-btn" id="add-job-btn" data-toggle="modal" data-target="#addJobModal">Add Job</button>
-                    </div>
-                    <div class="mb-4">
-                        <button class="btn btn-secondary discord-btn" id="toggle-search-btn">Toggle Search Options</button>
-                        <div id="search-options" class="p-3 rounded" style="display: none; background-color: #2f3136; border: 1px solid #4f545c;">
-                            <div class="form-group">
-                                <label for="search-name">Search by Name:</label>
-                                <input type="text" id="search-name" class="form-control mb-3" placeholder="Enter company or job title">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="search-start-date">Start Date:</label>
-                                    <input type="date" id="search-start-date" class="form-control">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="search-end-date">End Date:</label>
-                                    <input type="date" id="search-end-date" class="form-control">
-                                </div>
-                            </div>
-                            <button class="btn btn-primary discord-btn" id="search-btn">Search</button>
+        <div>
+            ${headerComponent.render()}
+            <div class="container mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3>Pending Jobs</h3>
+                    <button class="btn btn-primary discord-btn" id="add-job-btn" data-toggle="modal" data-target="#addJobModal">Add Job</button>
+                </div>
+                <div class="mb-4">
+                    <button class="btn btn-secondary discord-btn" id="toggle-search-btn">Toggle Search Options</button>
+                    <div id="search-options" class="p-3 rounded" style="display: none; background-color: #2f3136; border: 1px solid #4f545c;">
+                        <div class="form-group">
+                            <label for="search-name">Search by Name:</label>
+                            <input type="text" id="search-name" class="form-control mb-3" placeholder="Enter company or job title">
                         </div>
-                    </div>
-                    <div id="job-list" class="row">
-                        ${jobCards}
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="search-start-date">Start Date:</label>
+                                <input type="date" id="search-start-date" class="form-control">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="search-end-date">End Date:</label>
+                                <input type="date" id="search-end-date" class="form-control">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary discord-btn" id="search-btn">Search</button>
                     </div>
                 </div>
-                ${deleteJobModal}
-                ${addJobComponent.render()}
-                <div id="job-details-modal-container"></div>
+                <div class="mb-4">
+                    <button class="btn btn-secondary discord-btn dropdown-toggle" id="sort-btn" data-toggle="dropdown">Sort by</button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" id="sort-latest">Latest</a>
+                        <a class="dropdown-item" id="sort-oldest">Oldest</a>
+                    </div>
+                </div>
+                <div id="job-list" class="row">
+                    ${jobCards}
+                </div>
             </div>
-        `;
-    }
+            ${deleteJobModal}
+            ${addJobComponent.render()}
+            <div id="job-details-modal-container"></div>
+        </div>
+    `;
+}
 
     renderJobCards() {
         return this.filteredJobs.map(job => {
@@ -89,6 +95,14 @@ class MainComponent {
 
         document.getElementById('search-btn').addEventListener('click', () => {
             this.filterJobs();
+        });
+
+        document.getElementById('sort-latest').addEventListener('click', () => {
+            this.sortJobs('latest');
+        });
+
+        document.getElementById('sort-oldest').addEventListener('click', () => {
+            this.sortJobs('oldest');
         });
 
         this.attachCardEventListeners();
@@ -267,6 +281,17 @@ class MainComponent {
             console.error('Error achieving job:', error);
             alert(`There was an error achieving the job: ${error.message}. Please try again.`);
         }
+    }
+
+    sortJobs(order) {
+        if (order === 'latest') {
+            this.filteredJobs.sort((a, b) => new Date(b.dateApplied) - new Date(a.dateApplied));
+        } else if (order === 'oldest') {
+            this.filteredJobs.sort((a, b) => new Date(a.dateApplied) - new Date(b.dateApplied));
+        }
+
+        document.getElementById('job-list').innerHTML = this.renderJobCards();
+        this.attachCardEventListeners();
     }
 
     filterJobs() {
