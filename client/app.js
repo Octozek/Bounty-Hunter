@@ -1,10 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
-    const loginComponent = new LoginComponent();
-    app.innerHTML = loginComponent.render();
+    const token = localStorage.getItem('token');
 
-    // Initial form handler attachment
-    attachFormHandlers();
+    if (token) {
+        // User is already logged in
+        loadMainComponent();
+    } else {
+        // Show login form by default
+        const loginComponent = new LoginComponent();
+        app.innerHTML = loginComponent.render();
+        attachFormHandlers();
+    }
 
     // Event listeners for navigation buttons
     document.body.addEventListener('click', (e) => {
@@ -49,10 +55,7 @@ function attachFormHandlers() {
 
                 // Store the token and redirect to the main component
                 localStorage.setItem('token', data.token);
-                const mainComponent = new MainComponent();
-                await mainComponent.fetchJobs();
-                document.getElementById('app').innerHTML = mainComponent.render();
-                mainComponent.addEventListeners();
+                loadMainComponent();
             } catch (error) {
                 console.error('Error logging in:', error);
             }
@@ -87,10 +90,7 @@ function attachFormHandlers() {
 
                 // Store the token and redirect to the main component
                 localStorage.setItem('token', data.token);
-                const mainComponent = new MainComponent();
-                await mainComponent.fetchJobs();
-                document.getElementById('app').innerHTML = mainComponent.render();
-                mainComponent.addEventListeners();
+                loadMainComponent();
             } catch (error) {
                 console.error('Error signing up:', error);
             }
@@ -98,4 +98,11 @@ function attachFormHandlers() {
     } else {
         console.log('Signup form not found');
     }
+}
+
+async function loadMainComponent() {
+    const mainComponent = new MainComponent();
+    await mainComponent.fetchJobs();
+    document.getElementById('app').innerHTML = mainComponent.render();
+    mainComponent.addEventListeners();
 }

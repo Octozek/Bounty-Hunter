@@ -11,6 +11,7 @@ class HeaderComponent {
                     <button class="btn btn-secondary discord-btn ${this.activePage === 'pending' ? 'active' : ''}" id="pending-btn">Pending Jobs</button>
                     <button class="btn btn-secondary discord-btn ${this.activePage === 'declined' ? 'active' : ''}" id="declined-btn">Declined Jobs</button>
                     <button class="btn btn-secondary discord-btn ${this.activePage === 'achieved' ? 'active' : ''}" id="achieved-btn">Achieved Jobs</button>
+                    <button class="btn btn-danger discord-btn" id="logout-btn">Logout</button>
                 </nav>
             </header>
         `;
@@ -36,6 +37,13 @@ class HeaderComponent {
             await achievedJobsComponent.fetchAchievedJobs();
             document.getElementById('app').innerHTML = achievedJobsComponent.render();
             achievedJobsComponent.addEventListeners();
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            const loginComponent = new LoginComponent();
+            document.getElementById('app').innerHTML = loginComponent.render();
+            attachFormHandlers();
         });
     }
 }

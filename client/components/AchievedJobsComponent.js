@@ -128,6 +128,14 @@ class AchievedJobsComponent {
                 $('#deleteJobModal').modal('hide');
             }
         });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            const loginComponent = new LoginComponent();
+            document.getElementById('app').innerHTML = loginComponent.render();
+            attachFormHandlers();
+        });
+        
     }
 
     attachCardEventListeners() {
