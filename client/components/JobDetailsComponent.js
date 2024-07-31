@@ -14,9 +14,9 @@ class JobDetailsComponent {
                         </div>
                         <div class="modal-body">
                             <p><strong>Job Title:</strong> ${this.job.title}</p>
-                            <p><strong>Link:</strong> <a href="${this.job.link}" target="_blank">${this.job.link}</a></p>
+                            <p><strong>Link:</strong> <a href="${this.job.link}" target="_blank">Click here for link</a></p>
                             <p><strong>Pay:</strong> ${this.job.pay}</p>
-                            <p><strong>Date Applied:</strong> ${this.job.dateApplied}</p>
+                            <p><strong>Date Applied:</strong> ${new Date(this.job.dateApplied).toLocaleDateString()}</p>
                             <p><strong>Job Type:</strong> ${this.job.type}</p>
                             <p><strong>Notes:</strong> ${this.job.notes}</p>
                         </div>
