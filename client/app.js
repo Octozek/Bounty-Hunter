@@ -106,8 +106,16 @@ function attachFormHandlers() {
 }
 
 async function loadMainComponent() {
-    const mainComponent = new MainComponent();
-    await mainComponent.fetchJobs();
-    document.getElementById('app').innerHTML = mainComponent.render();
-    mainComponent.addEventListeners();
+    try {
+        const mainComponent = new MainComponent();
+        await mainComponent.fetchJobs();
+        document.getElementById('app').innerHTML = mainComponent.render();
+        mainComponent.addEventListeners();
+    } catch (error) {
+        console.error('Error loading main component:', error);
+        // If a 401 error occurs, redirect to the login page
+        const loginComponent = new LoginComponent();
+        document.getElementById('app').innerHTML = loginComponent.render();
+        attachFormHandlers();
+    }
 }

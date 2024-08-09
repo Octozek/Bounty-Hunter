@@ -13,12 +13,19 @@ class MainComponent {
                 'x-auth-token': token
             }
         });
+    
+        if (response.status === 401) {
+            throw new Error('Unauthorized: Please log in again');
+        }
+    
         if (!response.ok) {
             throw new Error('Failed to fetch jobs');
         }
+    
         this.jobs = await response.json();
         this.filteredJobs = this.jobs;
     }
+    
 
     render() {
         const headerComponent = new HeaderComponent('pending');
