@@ -24,6 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
             attachFormHandlers();
         }
     });
+
+    // Clear the token when the user closes the app
+    window.addEventListener('beforeunload', () => {
+        localStorage.removeItem('token');
+    });
 });
 
 function attachFormHandlers() {
