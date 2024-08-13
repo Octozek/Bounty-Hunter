@@ -2,6 +2,29 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const Job = require('../models/Job');
+const multer = require('multer');
+const path = require('path');
+
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/resumes/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    fileFilter: function (req, file, cb) {
+        const ext = path.extname(file.originalname);
+        if (ext !== '.pdf') {
+            return cb(new Error('Only PDFs are allowed'));
+        }
+        cb(null, true);
+    }
+});
 
 // Get all jobs
 router.get('/', auth, async (req, res) => {
@@ -36,7 +59,7 @@ router.get('/declined', auth, async (req, res) => {
 });
 
 // Add new job
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, upload.single('resume'), async (req, res) => {
     const { company, title, pay, dateApplied, type, link, notes } = req.body;
 
     try {
@@ -48,7 +71,8 @@ router.post('/', auth, async (req, res) => {
             dateApplied,
             type,
             link,
-            notes
+            notes,
+            resumeUrl: req.file ? `/uploads/resumes/${req.file.filename}` : null
         });
 
         const job = await newJob.save();
@@ -120,7 +144,5 @@ router.delete('/:id', auth, async (req, res) => {
         res.status(500).json({ msg: 'Server error' });
     }
 });
-
-
 
 module.exports = router;

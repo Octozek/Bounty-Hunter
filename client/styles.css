@@ -129,3 +129,48 @@ body.bg-discord-dark {
         padding-right: 15px;
     }
 }
+
+
+
+
+/* Resume Modal Specific Styles */
+#resumeModal .modal-content {
+    background-color: #2f3136 !important;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 8px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+#resumeModal .modal-header {
+    border-bottom: 1px solid #4f545c;
+}
+
+#resumeModal .modal-body {
+    white-space: pre-wrap; /* Preserves whitespace and line breaks */
+    color: #ffffff;
+    background-color: #3c3f44;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #4f545c;
+}
+
+#resumeModal .modal-footer {
+    border-top: 1px solid #4f545c;
+}
+
+#resumeModal .close {
+    color: #ffffff;
+}
+
+/* Adjust modal for mobile */
+@media (max-width: 576px) {
+    #resumeModal .modal-dialog {
+        margin: 10px;
+    }
+
+    #resumeModal .modal-content {
+        max-height: 70vh;
+    }
+}

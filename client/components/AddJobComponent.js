@@ -11,7 +11,7 @@ class AddJobComponent {
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="add-job-form">
+                            <form id="add-job-form" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="company">Company Name</label>
                                     <input type="text" class="form-control" id="company" required>
@@ -45,6 +45,10 @@ class AddJobComponent {
                                     <label for="notes">Notes</label>
                                     <textarea class="form-control" id="notes" rows="3"></textarea>
                                 </div>
+                                <div class="form-group">
+                                    <label for="resume">Resume (PDF)</label>
+                                    <input type="file" class="form-control-file" id="resume" accept="application/pdf">
+                                </div>
                                 <button type="submit" class="btn btn-primary">Done!</button>
                             </form>
                         </div>
@@ -57,26 +61,31 @@ class AddJobComponent {
     addEventListeners() {
         document.getElementById('add-job-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const company = document.getElementById('company').value;
-            const title = document.getElementById('title').value;
-            const pay = document.getElementById('pay').value;
-            const dateApplied = document.getElementById('dateApplied').value;
-            const type = document.getElementById('type').value;
-            const link = document.getElementById('link').value;
-            const notes = document.getElementById('notes').value;
 
-            const job = { company, title, pay, dateApplied, type, link, notes };
+            const formData = new FormData();
+            formData.append('company', document.getElementById('company').value);
+            formData.append('title', document.getElementById('title').value);
+            formData.append('pay', document.getElementById('pay').value);
+            formData.append('dateApplied', document.getElementById('dateApplied').value);
+            formData.append('type', document.getElementById('type').value);
+            formData.append('link', document.getElementById('link').value);
+            formData.append('notes', document.getElementById('notes').value);
+
+            const resumeFile = document.getElementById('resume').files[0];
+            if (resumeFile) {
+                formData.append('resume', resumeFile);
+            }
+
             const token = localStorage.getItem('token');
 
             try {
-                console.log('Sending job data to server:', job);
+                console.log('Sending job data with resume to server:', formData);
                 const response = await fetch(`${config.apiUrl}/jobs`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
                         'x-auth-token': token
                     },
-                    body: JSON.stringify(job)
+                    body: formData
                 });
 
                 if (!response.ok) {

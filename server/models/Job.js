@@ -37,6 +37,9 @@ const JobSchema = new Schema({
     achieved: {
         type: Boolean,
         default: false
+    },
+    resumeUrl: {
+        type: String
     }
 });
 
