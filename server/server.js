@@ -1,10 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const path = require('path');
-
 const fs = require('fs');
 
 if (fs.existsSync('.env')) {
@@ -23,6 +23,13 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
+
+// CORS Middleware - Allow requests from both local development and deployed frontend
+const corsOptions = {
+  origin: ['http://127.0.0.1:8080', 'https://bounty-hunter-mfbg.onrender.com'],
+  optionsSuccessStatus: 200, // For legacy browser support
+};
+app.use(cors(corsOptions));
 
 // Routes
 app.use('/api/users', userRoutes);

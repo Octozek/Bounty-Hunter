@@ -3,28 +3,11 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const Job = require('../models/Job');
 const multer = require('multer');
-const path = require('path');
+const pdfParse = require('pdf-parse');
 
-// Set up multer for file uploads
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/resumes/');
-    },
-    filename: function (req, file, cb) {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    }
-});
-
-const upload = multer({
-    storage: storage,
-    fileFilter: function (req, file, cb) {
-        const ext = path.extname(file.originalname);
-        if (ext !== '.pdf') {
-            return cb(new Error('Only PDFs are allowed'));
-        }
-        cb(null, true);
-    }
-});
+// Set up multer for in-memory storage
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // Get all jobs
 router.get('/', auth, async (req, res) => {
@@ -58,11 +41,18 @@ router.get('/declined', auth, async (req, res) => {
     }
 });
 
-// Add new job
+// Add new job with resume text extraction
 router.post('/', auth, upload.single('resume'), async (req, res) => {
     const { company, title, pay, dateApplied, type, link, notes } = req.body;
 
     try {
+        let resumeText = '';
+        if (req.file) {
+            const dataBuffer = req.file.buffer; // Get the file buffer (in-memory)
+            const pdfData = await pdfParse(dataBuffer); // Parse the PDF and extract the text
+            resumeText = pdfData.text; // Store the extracted text
+        }
+
         const newJob = new Job({
             userId: req.user.id,
             company,
@@ -72,7 +62,7 @@ router.post('/', auth, upload.single('resume'), async (req, res) => {
             type,
             link,
             notes,
-            resumeUrl: req.file ? `/uploads/resumes/${req.file.filename}` : null
+            resumeText // Save the extracted resume text instead of the file
         });
 
         const job = await newJob.save();

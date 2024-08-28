@@ -38,9 +38,9 @@ const JobSchema = new Schema({
         type: Boolean,
         default: false
     },
-    resumeUrl: {
-        type: String
-    }
+    resumeText: {
+        type: String, // Store the extracted text
+    },
 });
 
 module.exports = mongoose.model('Job', JobSchema);

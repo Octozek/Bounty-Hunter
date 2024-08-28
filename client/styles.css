@@ -149,11 +149,15 @@ body.bg-discord-dark {
 
 #resumeModal .modal-body {
     white-space: pre-wrap; /* Preserves whitespace and line breaks */
-    color: #ffffff;
+    color: #ffffff !important; /* Ensure text is white */
     background-color: #3c3f44;
     padding: 15px;
     border-radius: 8px;
     border: 1px solid #4f545c;
+}
+
+#resumeModal .modal-body pre {
+    color: #ffffff !important; /* Make sure text inside <pre> is white */
 }
 
 #resumeModal .modal-footer {
