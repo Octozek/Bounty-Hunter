@@ -9,15 +9,15 @@ function cleanText(text) {
     text = text.replace(/(\d)([a-zA-Z])/g, '$1 $2');
     // Add space before capital followed by lowercase
     text = text.replace(/(\S)([A-Z][a-z])/g, '$1 $2');
-
+    
     // Remove incorrect spaces within words that may have been caused by the above replacements
     text = text.replace(/\b([A-Z])\s+([a-z])\b/g, '$1$2');
-    
+
+    // Preserve line breaks and avoid collapsing them into a single line
+    text = text.replace(/\s*\n\s*/g, '\n'); // Remove excessive spaces around line breaks
+
     // Ensure multiple spaces are reduced to a single space
     text = text.replace(/\s{2,}/g, ' ');
-
-    // Keep line breaks intact but reduce any excessive line breaks to a single line break
-    text = text.replace(/\n\s*\n/g, '\n').replace(/\s*\n\s*/g, '\n');
 
     return text.trim();
 }
