@@ -11,7 +11,14 @@ class HeaderComponent {
                     <button class="btn btn-secondary discord-btn ${this.activePage === 'pending' ? 'active' : ''}" id="pending-btn">Pending Jobs</button>
                     <button class="btn btn-secondary discord-btn ${this.activePage === 'declined' ? 'active' : ''}" id="declined-btn">Declined Jobs</button>
                     <button class="btn btn-secondary discord-btn ${this.activePage === 'achieved' ? 'active' : ''}" id="achieved-btn">Achieved Jobs</button>
-                    <button class="btn btn-danger discord-btn" id="logout-btn">Logout</button>
+                    <button class="btn btn-secondary discord-btn ${this.activePage === 'about' ? 'active' : ''}" id="about-btn">About</button>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary discord-btn dropdown-toggle" id="settings-btn" data-toggle="dropdown">Settings</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" id="your-info-btn">Your Info</a>
+                            <a class="dropdown-item" id="logout-btn">Logout</a>
+                        </div>
+                    </div>
                 </nav>
             </header>
         `;
@@ -39,11 +46,51 @@ class HeaderComponent {
             achievedJobsComponent.addEventListeners();
         });
 
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            localStorage.removeItem('token');
-            const loginComponent = new LoginComponent();
-            document.getElementById('app').innerHTML = loginComponent.render();
-            attachFormHandlers();
+        document.getElementById('about-btn').addEventListener('click', async () => {
+            const aboutComponent = new AboutComponent();
+            await aboutComponent.fetchUserInfo();
+            document.getElementById('app').innerHTML = aboutComponent.render();
+            aboutComponent.addEventListeners();
         });
+
+        document.getElementById('your-info-btn').addEventListener('click', () => {
+            this.handleYourInfoClick();
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            this.handleLogoutClick();
+        });
+
+        document.addEventListener('click', (event) => {
+            const dropdown = document.querySelector('.dropdown-menu');
+            const settingsButton = document.getElementById('settings-btn');
+
+            if (dropdown.style.display === 'block' && !dropdown.contains(event.target) && !settingsButton.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    }
+
+    handleYourInfoClick() {
+        $('#settings-btn').dropdown('toggle');
+        const yourInfoComponent = new YourInfoComponent({
+            portfolioLink: '',
+            linkedinProfile: '',
+            facebookProfile: '',
+            phoneNumber: '',
+            email: '',
+            githubProfile: ''
+        });
+        document.getElementById('app').innerHTML += yourInfoComponent.render();
+        yourInfoComponent.addEventListeners();
+        $('#yourInfoModal').modal('show');
+    }
+
+    handleLogoutClick() {
+        $('#settings-btn').dropdown('toggle');
+        localStorage.removeItem('token');
+        const loginComponent = new LoginComponent();
+        document.getElementById('app').innerHTML = loginComponent.render();
+        attachFormHandlers();
     }
 }

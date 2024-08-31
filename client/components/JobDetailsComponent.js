@@ -10,7 +10,9 @@ class JobDetailsComponent {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">${this.job.company}</h5>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
                         <div class="modal-body">
                             <p><strong>Job Title:</strong> ${this.job.title}</p>
@@ -37,7 +39,9 @@ class JobDetailsComponent {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Resume</h5>
-                            <button type="button" class="close" id="close-resume-modal">&times;</button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
                         <div class="modal-body" id="resume-content" style="color: white; background-color: #2f3136;">
                             <pre>${this.job.resumeText}</pre>
@@ -49,21 +53,39 @@ class JobDetailsComponent {
     }
 
     addEventListeners() {
-        $('#jobDetailsModal').modal('show');
+        // Ensure jobDetailsModal exists before trying to show it
+        const jobDetailsModal = document.getElementById('jobDetailsModal');
+        if (jobDetailsModal) {
+            $('#jobDetailsModal').modal('show');
 
-        document.querySelector('#jobDetailsModal .close').addEventListener('click', () => {
-            $('#jobDetailsModal').modal('hide');
-        });
+            const closeButton = jobDetailsModal.querySelector('.close');
+            if (closeButton) {
+                closeButton.addEventListener('click', () => {
+                    $('#jobDetailsModal').modal('hide');
+                });
+            }
 
-        if (this.job.resumeText) {
-            document.getElementById('view-resume-btn').addEventListener('click', () => {
-                $('#resumeModal').modal('show');
-            });
+            if (this.job.resumeText) {
+                const viewResumeButton = document.getElementById('view-resume-btn');
+                if (viewResumeButton) {
+                    viewResumeButton.addEventListener('click', () => {
+                        $('#resumeModal').modal('show');
+                    });
+                }
+
+                // Make sure to get the close button from the resume modal only after it's rendered
+                const resumeModal = document.getElementById('resumeModal');
+                if (resumeModal) {
+                    const closeResumeButton = resumeModal.querySelector('.close');
+                    if (closeResumeButton) {
+                        closeResumeButton.addEventListener('click', () => {
+                            $('#resumeModal').modal('hide');
+                        });
+                    }
+                }
+            }
+        } else {
+            console.error('Job Details Modal not found');
         }
-
-        // Close the resume modal and return to the job details modal
-        document.getElementById('close-resume-modal').addEventListener('click', () => {
-            $('#resumeModal').modal('hide');
-        });
     }
 }

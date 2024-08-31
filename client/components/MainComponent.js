@@ -13,19 +13,18 @@ class MainComponent {
                 'x-auth-token': token
             }
         });
-    
+
         if (response.status === 401) {
             throw new Error('Unauthorized: Please log in again');
         }
-    
+
         if (!response.ok) {
             throw new Error('Failed to fetch jobs');
         }
-    
+
         this.jobs = await response.json();
         this.filteredJobs = this.jobs;
     }
-    
 
     render() {
         const headerComponent = new HeaderComponent('pending');
@@ -76,8 +75,8 @@ class MainComponent {
             ${addJobComponent.render()}
             <div id="job-details-modal-container"></div>
         </div>
-    `;
-}
+        `;
+    }
 
     renderJobCards() {
         return this.filteredJobs.map(job => {
@@ -185,9 +184,13 @@ class MainComponent {
                     if (!e.target.classList.contains('dropdown-toggle') && !e.target.classList.contains('delete-job-btn')) {
                         const jobId = e.currentTarget.dataset.id;
                         const job = this.jobs.find(job => job._id === jobId);
-                        const jobDetailsComponent = new JobDetailsComponent(job);
-                        document.getElementById('job-details-modal-container').innerHTML = jobDetailsComponent.render();
-                        jobDetailsComponent.addEventListeners();
+                        if (job) {
+                            const jobDetailsComponent = new JobDetailsComponent(job);
+                            document.getElementById('job-details-modal-container').innerHTML = jobDetailsComponent.render();
+                            jobDetailsComponent.addEventListeners();
+                        } else {
+                            console.error('Job not found:', jobId);
+                        }
                     }
                 });
             });
@@ -221,7 +224,7 @@ class MainComponent {
     async deleteJob(jobId) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${config.apiUrl}/jobs/${jobId}`, {
+            const response = await fetch(`${window.config.apiUrl}/jobs/${jobId}`, {
                 method: 'DELETE',
                 headers: {
                     'x-auth-token': token
@@ -245,7 +248,7 @@ class MainComponent {
     async addToDeclined(jobId) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${config.apiUrl}/jobs/${jobId}/decline`, {
+            const response = await fetch(`${window.config.apiUrl}/jobs/${jobId}/decline`, {
                 method: 'PUT',
                 headers: {
                     'x-auth-token': token
@@ -269,7 +272,7 @@ class MainComponent {
     async addToAchieved(jobId) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${config.apiUrl}/jobs/${jobId}/achieve`, {
+            const response = await fetch(`${window.config.apiUrl}/jobs/${jobId}/achieve`, {
                 method: 'PUT',
                 headers: {
                     'x-auth-token': token

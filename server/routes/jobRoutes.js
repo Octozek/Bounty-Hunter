@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const Job = require('../models/Job');
 const multer = require('multer');
-const pdfParse = require('pdf-parse');
+const { processResume } = require('../utils/resumeProcessor');
 
 // Set up multer for in-memory storage
 const storage = multer.memoryStorage();
@@ -48,9 +48,7 @@ router.post('/', auth, upload.single('resume'), async (req, res) => {
     try {
         let resumeText = '';
         if (req.file) {
-            const dataBuffer = req.file.buffer; // Get the file buffer (in-memory)
-            const pdfData = await pdfParse(dataBuffer); // Parse the PDF and extract the text
-            resumeText = pdfData.text; // Store the extracted text
+            resumeText = await processResume(req.file.buffer);
         }
 
         const newJob = new Job({
@@ -62,7 +60,7 @@ router.post('/', auth, upload.single('resume'), async (req, res) => {
             type,
             link,
             notes,
-            resumeText // Save the extracted resume text instead of the file
+            resumeText // Save the processed resume text instead of the file
         });
 
         const job = await newJob.save();

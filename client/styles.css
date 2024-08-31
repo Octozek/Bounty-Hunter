@@ -151,13 +151,18 @@ body.bg-discord-dark {
     white-space: pre-wrap; /* Preserves whitespace and line breaks */
     color: #ffffff !important; /* Ensure text is white */
     background-color: #3c3f44;
-    padding: 15px;
+    padding: 20px; /* Increase padding for better readability */
     border-radius: 8px;
     border: 1px solid #4f545c;
+    font-family: Arial, sans-serif; /* Change font to Arial for better readability */
+    font-size: 16px; /* Increase font size */
+    line-height: 1.5; /* Adjust line height for better spacing */
 }
 
 #resumeModal .modal-body pre {
-    color: #ffffff !important; /* Make sure text inside <pre> is white */
+    color: #ffffff !important; /* Ensure text inside <pre> is white */
+    font-family: Arial, sans-serif; /* Match the font with modal body */
+    font-size: 16px; /* Increase font size inside <pre> */
 }
 
 #resumeModal .modal-footer {
