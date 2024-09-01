@@ -61,6 +61,7 @@ class HeaderComponent {
             this.handleLogoutClick();
         });
 
+        // Handle dropdown close on click outside
         document.addEventListener('click', (event) => {
             const dropdown = document.querySelector('.dropdown-menu');
             const settingsButton = document.getElementById('settings-btn');
@@ -72,7 +73,7 @@ class HeaderComponent {
     }
 
     handleYourInfoClick() {
-        $('#settings-btn').dropdown('toggle');
+        $('#settings-btn').dropdown('toggle');  // Close the dropdown
         const yourInfoComponent = new YourInfoComponent({
             portfolioLink: '',
             linkedinProfile: '',
@@ -84,13 +85,24 @@ class HeaderComponent {
         document.getElementById('app').innerHTML += yourInfoComponent.render();
         yourInfoComponent.addEventListeners();
         $('#yourInfoModal').modal('show');
+
+        // Reattach main component event listeners after closing the modal
+        $('#yourInfoModal').on('hidden.bs.modal', () => {
+            this.reattachMainEventListeners();
+        });
     }
 
     handleLogoutClick() {
-        $('#settings-btn').dropdown('toggle');
+        $('#settings-btn').dropdown('toggle');  // Close the dropdown
         localStorage.removeItem('token');
         const loginComponent = new LoginComponent();
         document.getElementById('app').innerHTML = loginComponent.render();
         attachFormHandlers();
+        this.reattachMainEventListeners();
+    }
+
+    reattachMainEventListeners() {
+        const mainComponent = new MainComponent();
+        mainComponent.addEventListeners();
     }
 }

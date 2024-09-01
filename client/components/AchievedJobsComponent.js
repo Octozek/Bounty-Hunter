@@ -20,12 +20,11 @@ class AchievedJobsComponent {
         this.filteredAchievedJobs = this.achievedJobs;
     }
     
-
     render() {
         const headerComponent = new HeaderComponent('achieved');
         const jobCards = this.renderJobCards();
         const deleteJobModal = this.renderDeleteJobModal();
-
+    
         return `
             <div>
                 ${headerComponent.render()}
@@ -53,7 +52,7 @@ class AchievedJobsComponent {
                             <button class="btn btn-primary discord-btn" id="search-btn">Search</button>
                         </div>
                     </div>
-                    <div id="job-list" class="row">
+                    <div id="job-list-container" class="row">
                         ${jobCards}
                     </div>
                 </div>
@@ -62,6 +61,7 @@ class AchievedJobsComponent {
             </div>
         `;
     }
+    
 
     renderJobCards() {
         return this.filteredAchievedJobs.map(job => `
@@ -86,6 +86,7 @@ class AchievedJobsComponent {
     }
 
     addEventListeners() {
+        // Handle navigation to Pending Jobs
         document.getElementById('pending-btn').addEventListener('click', async () => {
             const mainComponent = new MainComponent();
             await mainComponent.fetchJobs();
@@ -93,6 +94,7 @@ class AchievedJobsComponent {
             mainComponent.addEventListeners();
         });
 
+        // Handle navigation to Declined Jobs
         document.getElementById('declined-btn').addEventListener('click', async () => {
             const declinedJobsComponent = new DeclinedJobsComponent();
             await declinedJobsComponent.fetchDeclinedJobs();
@@ -100,16 +102,27 @@ class AchievedJobsComponent {
             declinedJobsComponent.addEventListeners();
         });
 
+        // Handle navigation to About page
+        document.getElementById('about-btn').addEventListener('click', async () => {
+            const aboutComponent = new AboutComponent();
+            await aboutComponent.fetchUserInfo();
+            document.getElementById('app').innerHTML = aboutComponent.render();
+            aboutComponent.addEventListeners();
+        });
+
+        // Toggle search options
         document.getElementById('toggle-search-btn').addEventListener('click', () => {
             const searchOptions = document.getElementById('search-options');
             this.showSearchOptions = !this.showSearchOptions;
             searchOptions.style.display = this.showSearchOptions ? 'block' : 'none';
         });
 
+        // Search jobs
         document.getElementById('search-btn').addEventListener('click', () => {
             this.filterJobs();
         });
 
+        // Attach event listeners to job cards
         this.attachCardEventListeners();
 
         // Close dropdown when clicking outside
@@ -122,6 +135,7 @@ class AchievedJobsComponent {
             });
         });
 
+        // Handle delete job confirmation
         document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
             if (this.selectedJobId) {
                 await this.deleteJob(this.selectedJobId);
@@ -129,13 +143,13 @@ class AchievedJobsComponent {
             }
         });
 
+        // Handle logout
         document.getElementById('logout-btn').addEventListener('click', () => {
             localStorage.removeItem('token');
             const loginComponent = new LoginComponent();
             document.getElementById('app').innerHTML = loginComponent.render();
             attachFormHandlers();
         });
-        
     }
 
     attachCardEventListeners() {
@@ -165,9 +179,11 @@ class AchievedJobsComponent {
                     if (!e.target.classList.contains('dropdown-toggle') && !e.target.classList.contains('delete-job-btn')) {
                         const jobId = e.currentTarget.dataset.id;
                         const job = this.filteredAchievedJobs.find(job => job._id === jobId);
-                        const jobDetailsComponent = new JobDetailsComponent(job);
-                        document.getElementById('job-details-modal-container').innerHTML = jobDetailsComponent.render();
-                        jobDetailsComponent.addEventListeners();
+                        if (job) {
+                            const jobDetailsComponent = new JobDetailsComponent(job);
+                            document.getElementById('job-details-modal-container').innerHTML = jobDetailsComponent.render();
+                            jobDetailsComponent.addEventListeners();
+                        }
                     }
                 });
             });
@@ -201,7 +217,7 @@ class AchievedJobsComponent {
     async deleteJob(jobId) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${config.apiUrl}/jobs/${jobId}`, {
+            const response = await fetch(`${window.config.apiUrl}/jobs/${jobId}`, {
                 method: 'DELETE',
                 headers: {
                     'x-auth-token': token

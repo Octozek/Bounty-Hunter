@@ -31,7 +31,7 @@ class MainComponent {
         const jobCards = this.renderJobCards();
         const deleteJobModal = this.renderDeleteJobModal();
         const addJobComponent = new AddJobComponent();
-
+    
         return `
         <div>
             ${headerComponent.render()}
@@ -67,8 +67,10 @@ class MainComponent {
                         <a class="dropdown-item" id="sort-oldest">Oldest</a>
                     </div>
                 </div>
-                <div id="job-list" class="row">
-                    ${jobCards}
+                <div id="job-list-container" style="max-height: 70vh; overflow-y: auto;">
+                    <div id="job-list" class="row">
+                        ${jobCards}
+                    </div>
                 </div>
             </div>
             ${deleteJobModal}
@@ -77,6 +79,7 @@ class MainComponent {
         </div>
         `;
     }
+    
 
     renderJobCards() {
         return this.filteredJobs.map(job => {
