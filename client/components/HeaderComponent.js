@@ -5,24 +5,26 @@ class HeaderComponent {
 
     render() {
         return `
-            <header class="d-flex justify-content-between align-items-center p-3 bg-discord-dark text-white">
+            <header class="bg-discord-dark text-white">
                 <h2>Bounty Hunter</h2>
                 <nav>
-                    <button class="btn btn-secondary discord-btn ${this.activePage === 'pending' ? 'active' : ''}" id="pending-btn">Pending Jobs</button>
-                    <button class="btn btn-secondary discord-btn ${this.activePage === 'declined' ? 'active' : ''}" id="declined-btn">Declined Jobs</button>
-                    <button class="btn btn-secondary discord-btn ${this.activePage === 'achieved' ? 'active' : ''}" id="achieved-btn">Achieved Jobs</button>
+                    <button class="btn btn-secondary discord-btn ${this.activePage === 'pending' ? 'active' : ''}" id="pending-btn">Pending</button>
+                    <button class="btn btn-secondary discord-btn ${this.activePage === 'declined' ? 'active' : ''}" id="declined-btn">Declined</button>
+                    <button class="btn btn-secondary discord-btn ${this.activePage === 'achieved' ? 'active' : ''}" id="achieved-btn">Achieved</button>
                     <button class="btn btn-secondary discord-btn ${this.activePage === 'about' ? 'active' : ''}" id="about-btn">About</button>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary discord-btn dropdown-toggle" id="settings-btn" data-toggle="dropdown">Settings</button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" id="your-info-btn">Your Info</a>
-                            <a class="dropdown-item" id="logout-btn">Logout</a>
-                        </div>
-                    </div>
                 </nav>
+                <button class="btn btn-icon" id="settings-btn">
+                    <i class="fas fa-cog"></i> <!-- Settings icon -->
+                </button>
+                <div class="dropdown-menu" id="settings-menu">
+                    <a class="dropdown-item" id="your-info-btn">Your Info</a>
+                    <a class="dropdown-item" id="logout-btn">Logout</a>
+                </div>
             </header>
         `;
     }
+
+
 
     addEventListeners() {
         document.getElementById('pending-btn').addEventListener('click', async () => {
@@ -61,19 +63,26 @@ class HeaderComponent {
             this.handleLogoutClick();
         });
 
+        // Toggle settings dropdown
+        document.getElementById('settings-btn').addEventListener('click', () => {
+            const settingsMenu = document.getElementById('settings-menu');
+            settingsMenu.classList.toggle('show');
+        });
+
         // Handle dropdown close on click outside
         document.addEventListener('click', (event) => {
-            const dropdown = document.querySelector('.dropdown-menu');
+            const dropdown = document.getElementById('settings-menu');
             const settingsButton = document.getElementById('settings-btn');
 
-            if (dropdown.style.display === 'block' && !dropdown.contains(event.target) && !settingsButton.contains(event.target)) {
-                dropdown.style.display = 'none';
+            if (dropdown.classList.contains('show') && !dropdown.contains(event.target) && !settingsButton.contains(event.target)) {
+                dropdown.classList.remove('show');
             }
         });
     }
 
     handleYourInfoClick() {
-        $('#settings-btn').dropdown('toggle');  // Close the dropdown
+        const settingsMenu = document.getElementById('settings-menu');
+        settingsMenu.classList.remove('show');  // Close the dropdown
         const yourInfoComponent = new YourInfoComponent({
             portfolioLink: '',
             linkedinProfile: '',
@@ -93,7 +102,8 @@ class HeaderComponent {
     }
 
     handleLogoutClick() {
-        $('#settings-btn').dropdown('toggle');  // Close the dropdown
+        const settingsMenu = document.getElementById('settings-menu');
+        settingsMenu.classList.remove('show');  // Close the dropdown
         localStorage.removeItem('token');
         const loginComponent = new LoginComponent();
         document.getElementById('app').innerHTML = loginComponent.render();

@@ -2,29 +2,112 @@
 body.bg-discord-dark {
     background-color: #36393f;
     color: #ffffff;
-    overflow: hidden; /* Prevent the body from having a scrollbar */
     font-family: 'Roboto', sans-serif;
 }
 
+/* ========== Header Styles ========== */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px; /* Increase padding for a larger header */
+    background-color: #2f3136;
+    position: relative;
+    height: 150px; /* Increased height to avoid overlap */
+}
+
+header h2 {
+    font-size: 28px; /* Slightly larger font size */
+    color: #ffffff;
+    margin: 0;
+    text-align: left;
+    position: absolute;
+    top: 10px; /* Position above the buttons */
+    left: 20px;
+}
+
 /* ========== Button Styles ========== */
-.btn-primary {
+header nav {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 10px; /* Adjusted bottom position to prevent overlap */
+    left: 0;
+    right: 0;
+    padding: 0 20px;
+    background-color: #2f3136;
+}
+
+header nav button {
+    flex: 1;
+    background-color: #4f545c;
+    color: #ffffff;
+    border: none;
+    padding: 10px;
+    margin: 0 5px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+header nav button:hover {
     background-color: #7289da;
-    border-color: #7289da;
 }
 
-.btn-primary:hover {
-    background-color: #5b6eae;
-    border-color: #5b6eae;
+/* ========== Settings Icon Styles ========== */
+.btn-icon {
+    position: absolute;
+    top: 10px; /* Adjusted top position */
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 64px; /* Doubled the icon size */
+    cursor: pointer;
+    padding: 0;
 }
 
-.btn-secondary {
-    background-color: #99aab5;
-    border-color: #99aab5;
+.btn-icon i {
+    font-size: inherit; /* Inherit the size from the parent */
 }
 
-.btn-secondary:hover {
-    background-color: #7289da;
-    border-color: #7289da;
+/* ========== Dropdown Menu Styles ========== */
+#settings-menu {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    background-color: #2f3136;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    padding: 10px 0;
+    display: none;
+    min-width: 150px;
+}
+
+#settings-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    color: #b9bbbe;
+    padding: 8px 15px;
+    font-size: 14px;
+    text-align: left;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #3e4147;
+    color: #ffffff;
+}
+
+/* Divider for better separation between items */
+.dropdown-divider {
+    height: 1px;
+    margin: 5px 0;
+    background-color: #4f545c;
 }
 
 /* ========== Modal Styles ========== */
@@ -41,26 +124,6 @@ body.bg-discord-dark {
 
 .modal-footer {
     border-top: 1px solid #4f545c;
-}
-
-/* ========== Dropdown Menu Styles ========== */
-.dropdown-menu {
-    background-color: #2f3136 !important;
-    border: 1px solid #4f545c;
-}
-
-.dropdown-item {
-    color: #ffffff !important;
-}
-
-.dropdown-item:hover {
-    background-color: #7289da;
-    color: #ffffff;
-}
-
-.discord-btn.active {
-    background-color: #4f545c;
-    border-color: #34383d;
 }
 
 /* ========== Search Options Styles ========== */
@@ -230,41 +293,5 @@ body.bg-discord-dark {
 
     #resumeModal .modal-content {
         max-height: 70vh;
-    }
-}
-
-/* ========== Mobile Styles ========== */
-@media (max-width: 576px) {
-    header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    header nav {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-    }
-
-    header nav button {
-        width: 100%;
-        margin: 5px 0;
-    }
-
-    .container.mt-4 {
-        padding: 15px;
-    }
-
-    .container.mt-4 h3 {
-        font-size: 20px;
-    }
-
-    .container.mt-4 p {
-        font-size: 14px;
-    }
-
-    .copy-btn {
-        padding: 4px 8px;
-        font-size: 12px;
     }
 }
