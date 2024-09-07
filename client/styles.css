@@ -1,3 +1,8 @@
+body {
+    overflow: hidden; /* Prevent the body from scrolling */
+}
+
+
 /* ========== Global Styles ========== */
 body.bg-discord-dark {
     background-color: #36393f;
@@ -54,6 +59,13 @@ header nav button {
 header nav button:hover {
     background-color: #7289da;
 }
+
+
+#your-scrollable-container {
+    overflow-y: auto; /* Allow vertical scrolling */
+    max-height: 100vh; /* Ensure it doesn't go beyond the viewport height */
+}
+
 
 /* ========== Settings Icon Styles ========== */
 .btn-icon {
@@ -193,6 +205,17 @@ header nav button:hover {
     margin: 0 auto; /* Center the cards */
     box-sizing: border-box; /* Include padding in width */
 }
+
+#job-list-container {
+    max-height: 70vh; /* Limit the height to a percentage of the viewport height */
+    overflow-y: auto; /* Enable vertical scrolling inside the box */
+    padding-right: 8px; /* Space for the scrollbar */
+    padding-bottom: 20px; /* Add padding at the bottom */
+    width: 100%; /* Make it take full width of the container */
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
+}
+
+
 
 .job-card {
     width: 100%;
