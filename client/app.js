@@ -29,18 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('beforeunload', () => {
         localStorage.removeItem('token');
     });
-
-    // === Hammer.js Swipe Functionality ===
-    // Initialize Hammer.js for swipe detection
-    const hammer = new Hammer(document.body);
-
-    hammer.on('swipeleft', () => {
-        handleSwipe('left');
-    });
-
-    hammer.on('swiperight', () => {
-        handleSwipe('right');
-    });
 });
 
 function attachFormHandlers() {
@@ -130,49 +118,4 @@ async function loadMainComponent() {
         document.getElementById('app').innerHTML = loginComponent.render();
         attachFormHandlers();
     }
-}
-
-// === Swipe Handling for Page Navigation ===
-let currentPage = 'pending'; // Start with the pending page
-
-function handleSwipe(direction) {
-    if (direction === 'left') {
-        if (currentPage === 'pending') goToPage('declined');
-        else if (currentPage === 'declined') goToPage('achieved');
-        else if (currentPage === 'achieved') goToPage('about');
-    } else if (direction === 'right') {
-        if (currentPage === 'about') goToPage('achieved');
-        else if (currentPage === 'achieved') goToPage('declined');
-        else if (currentPage === 'declined') goToPage('pending');
-    }
-}
-
-function goToPage(page) {
-    const app = document.getElementById('app');
-    if (page === 'pending') {
-        const mainComponent = new MainComponent();
-        mainComponent.fetchJobs().then(() => {
-            app.innerHTML = mainComponent.render();
-            mainComponent.addEventListeners();
-        });
-    } else if (page === 'declined') {
-        const declinedComponent = new DeclinedJobsComponent();
-        declinedComponent.fetchDeclinedJobs().then(() => {
-            app.innerHTML = declinedComponent.render();
-            declinedComponent.addEventListeners();
-        });
-    } else if (page === 'achieved') {
-        const achievedComponent = new AchievedJobsComponent();
-        achievedComponent.fetchAchievedJobs().then(() => {
-            app.innerHTML = achievedComponent.render();
-            achievedComponent.addEventListeners();
-        });
-    } else if (page === 'about') {
-        const aboutComponent = new AboutComponent();
-        aboutComponent.fetchUserInfo().then(() => {
-            app.innerHTML = aboutComponent.render();
-            aboutComponent.addEventListeners();
-        });
-    }
-    currentPage = page;
 }
