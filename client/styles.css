@@ -10,6 +10,27 @@ body.bg-discord-dark {
     font-family: 'Roboto', sans-serif;
 }
 
+/* ========== Password Styles ========== */
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 40px; /* Ensure there's room for the icon */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #7289da;
+    font-size: 20px;
+}
+
+
 /* ========== Header Styles ========== */
 header {
     display: flex;
@@ -223,7 +244,7 @@ header nav button:hover {
 }
 
 /* ========== About Page Styles ========== */
-/* About Page Container */
+
 .container.mt-4 {
     background-color: #2f3136;
     border-radius: 8px;
@@ -254,6 +275,12 @@ header nav button:hover {
     color: #7289da;
     font-weight: 600;
     width: 120px; /* Fixed width for labels */
+}
+
+/* Divider between sections */
+.section-divider {
+    border-bottom: 1px solid #4f545c; /* Line between sections */
+    margin: 10px 0; /* Add space above and below the line */
 }
 
 /* Flex container for the link and copy button */
@@ -294,7 +321,6 @@ header nav button:hover {
 .copy-btn:hover {
     background-color: #5b6eae;
 }
-
 
 
 /* ========== Resume Modal Specific Styles ========== */
@@ -347,3 +373,4 @@ header nav button:hover {
         max-height: 70vh;
     }
 }
+

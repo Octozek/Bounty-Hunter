@@ -9,19 +9,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show login form by default
         const loginComponent = new LoginComponent();
         app.innerHTML = loginComponent.render();
-        attachFormHandlers();
+        loginComponent.addEventListeners(); // Attach the event listeners
     }
 
-    // Event listeners for navigation buttons
+    // Event listeners for navigation buttons (between signup and login)
     document.body.addEventListener('click', (e) => {
         if (e.target.id === 'signup-btn') {
             const signupComponent = new SignupComponent();
             app.innerHTML = signupComponent.render();
-            attachFormHandlers();
+            signupComponent.addEventListeners(); // Attach the event listeners
         } else if (e.target.id === 'login-btn') {
             const loginComponent = new LoginComponent();
             app.innerHTML = loginComponent.render();
-            attachFormHandlers();
+            loginComponent.addEventListeners(); // Attach the event listeners
         }
     });
 
@@ -32,18 +32,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function attachFormHandlers() {
-    console.log('Attaching form handlers...');
-
     const loginForm = document.getElementById('login-form');
+    const errorMessage = document.createElement('p');
+    errorMessage.className = 'text-danger mt-2';
+
     if (loginForm) {
-        console.log('Login form found');
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            console.log('Login form submitted:', { email, password });
 
-            // Handle login logic here
             try {
                 const response = await fetch(`${window.config.apiUrl}/users/login`, {
                     method: 'POST',
@@ -52,33 +50,29 @@ function attachFormHandlers() {
                     },
                     body: JSON.stringify({ email, password })
                 });
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                console.log('Login response:', data);
 
-                // Store the token and redirect to the main component
+                if (!response.ok) {
+                    throw new Error('Login failed');
+                }
+
+                const data = await response.json();
                 localStorage.setItem('token', data.token);
                 loadMainComponent();
             } catch (error) {
                 console.error('Error logging in:', error);
+                errorMessage.textContent = 'Wrong email or password. Please try again.';
+                loginForm.querySelector('.btn-primary').after(errorMessage);
             }
         });
-    } else {
-        console.log('Login form not found');
     }
 
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
-        console.log('Signup form found');
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            console.log('Signup form submitted:', { email, password });
 
-            // Handle signup logic here
             try {
                 const response = await fetch(`${window.config.apiUrl}/users/signup`, {
                     method: 'POST',
@@ -87,21 +81,20 @@ function attachFormHandlers() {
                     },
                     body: JSON.stringify({ email, password })
                 });
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                console.log('Signup response:', data);
 
-                // Store the token and redirect to the main component
+                if (!response.ok) {
+                    throw new Error('Signup failed');
+                }
+
+                const data = await response.json();
                 localStorage.setItem('token', data.token);
                 loadMainComponent();
             } catch (error) {
                 console.error('Error signing up:', error);
+                errorMessage.textContent = 'Signup failed. Please try again.';
+                signupForm.querySelector('.btn-primary').after(errorMessage);
             }
         });
-    } else {
-        console.log('Signup form not found');
     }
 }
 
@@ -113,9 +106,8 @@ async function loadMainComponent() {
         mainComponent.addEventListeners();
     } catch (error) {
         console.error('Error loading main component:', error);
-        // If a 401 error occurs, redirect to the login page
         const loginComponent = new LoginComponent();
         document.getElementById('app').innerHTML = loginComponent.render();
-        attachFormHandlers();
+        loginComponent.addEventListeners();
     }
 }
