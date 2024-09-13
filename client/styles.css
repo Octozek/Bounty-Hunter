@@ -223,6 +223,7 @@ header nav button:hover {
 }
 
 /* ========== About Page Styles ========== */
+/* About Page Container */
 .container.mt-4 {
     background-color: #2f3136;
     border-radius: 8px;
@@ -239,19 +240,44 @@ header nav button:hover {
     margin-bottom: 20px;
 }
 
+/* Flexbox for labels, links, and buttons */
 .container.mt-4 p {
     font-size: 16px;
     margin-bottom: 15px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .container.mt-4 p strong {
     color: #7289da;
-    margin-right: 10px;
     font-weight: 600;
+    width: 120px; /* Fixed width for labels */
 }
 
+/* Flex container for the link and copy button */
+.link-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+}
+
+/* Links styling */
+.container.mt-4 p a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    word-break: break-word;
+    flex: 1; /* Let the link take up available space */
+}
+
+.container.mt-4 p a:hover {
+    color: #7289da;
+}
+
+/* Copy button styling */
 .copy-btn {
     background-color: #7289da;
     border: none;
@@ -262,11 +288,14 @@ header nav button:hover {
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevents text from wrapping */
 }
 
 .copy-btn:hover {
     background-color: #5b6eae;
 }
+
+
 
 /* ========== Resume Modal Specific Styles ========== */
 #resumeModal .modal-content {

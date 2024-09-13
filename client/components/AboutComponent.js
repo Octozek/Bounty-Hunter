@@ -30,12 +30,30 @@ class AboutComponent {
                 ${headerComponent.render()}
                 <div class="container mt-4">
                     <h3>About</h3>
-                    <p><strong>Portfolio Link:</strong> ${this.userInfo.portfolioLink} <button class="btn btn-sm btn-secondary copy-btn" data-copy="${this.userInfo.portfolioLink}">Copy</button></p>
-                    <p><strong>LinkedIn Profile:</strong> ${this.userInfo.linkedinProfile} <button class="btn btn-sm btn-secondary copy-btn" data-copy="${this.userInfo.linkedinProfile}">Copy</button></p>
-                    <p><strong>Facebook Profile:</strong> ${this.userInfo.facebookProfile} <button class="btn btn-sm btn-secondary copy-btn" data-copy="${this.userInfo.facebookProfile}">Copy</button></p>
-                    <p><strong>Phone Number:</strong> ${this.userInfo.phoneNumber} <button class="btn btn-sm btn-secondary copy-btn" data-copy="${this.userInfo.phoneNumber}">Copy</button></p>
-                    <p><strong>Email:</strong> ${this.userInfo.email} <button class="btn btn-sm btn-secondary copy-btn" data-copy="${this.userInfo.email}">Copy</button></p>
-                    <p><strong>GitHub Profile:</strong> ${this.userInfo.githubProfile} <button class="btn btn-sm btn-secondary copy-btn" data-copy="${this.userInfo.githubProfile}">Copy</button></p>
+                    <div class="info-item">
+                        <p><strong>Portfolio:</strong></p>
+                        <p>${this.userInfo.portfolioLink} <button class="btn btn-sm btn-secondary copy-btn" data-copy="${this.userInfo.portfolioLink}">Copy</button></p>
+                    </div>
+                    <div class="info-item">
+                        <p><strong>LinkedIn:</strong></p>
+                        <p>${this.userInfo.linkedinProfile} <button class="btn btn-sm btn-secondary copy-btn" data-copy="${this.userInfo.linkedinProfile}">Copy</button></p>
+                    </div>
+                    <div class="info-item">
+                        <p><strong>Facebook:</strong></p>
+                        <p>${this.userInfo.facebookProfile} <button class="btn btn-sm btn-secondary copy-btn" data-copy="${this.userInfo.facebookProfile}">Copy</button></p>
+                    </div>
+                    <div class="info-item">
+                        <p><strong>Phone #:</strong></p>
+                        <p>${this.userInfo.phoneNumber} <button class="btn btn-sm btn-secondary copy-btn" data-copy="${this.userInfo.phoneNumber}">Copy</button></p>
+                    </div>
+                    <div class="info-item">
+                        <p><strong>Email:</strong></p>
+                        <p>${this.userInfo.email} <button class="btn btn-sm btn-secondary copy-btn" data-copy="${this.userInfo.email}">Copy</button></p>
+                    </div>
+                    <div class="info-item">
+                        <p><strong>GitHub:</strong></p>
+                        <p>${this.userInfo.githubProfile} <button class="btn btn-sm btn-secondary copy-btn" data-copy="${this.userInfo.githubProfile}">Copy</button></p>
+                    </div>
                 </div>
             </div>
         `;
