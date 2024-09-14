@@ -19,12 +19,12 @@ class AchievedJobsComponent {
         this.achievedJobs = await response.json();
         this.filteredAchievedJobs = this.achievedJobs;
     }
-    
+
     render() {
         const headerComponent = new HeaderComponent('achieved');
         const jobCards = this.renderJobCards();
         const deleteJobModal = this.renderDeleteJobModal();
-    
+
         return `
             <div>
                 ${headerComponent.render()}
@@ -32,28 +32,10 @@ class AchievedJobsComponent {
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3>Achieved Jobs</h3>
                     </div>
-                    <div class="mb-4">
-                        <button class="btn btn-secondary discord-btn" id="toggle-search-btn">Toggle Search Options</button>
-                        <div id="search-options" class="p-3 rounded" style="display: none; background-color: #2f3136; border: 1px solid #4f545c;">
-                            <div class="form-group">
-                                <label for="search-name">Search by Name:</label>
-                                <input type="text" id="search-name" class="form-control mb-3" placeholder="Enter company or job title">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="search-start-date">Start Date:</label>
-                                    <input type="date" id="search-start-date" class="form-control">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="search-end-date">End Date:</label>
-                                    <input type="date" id="search-end-date" class="form-control">
-                                </div>
-                            </div>
-                            <button class="btn btn-primary discord-btn" id="search-btn">Search</button>
+                    <div id="job-list-container" class="job-list-container"> <!-- Reusing shared styles for container -->
+                        <div id="achieved-job-list" class="job-list"> <!-- Full-width job list -->
+                            ${jobCards}
                         </div>
-                    </div>
-                    <div id="job-list-container" class="row">
-                        ${jobCards}
                     </div>
                 </div>
                 ${deleteJobModal}
@@ -61,7 +43,6 @@ class AchievedJobsComponent {
             </div>
         `;
     }
-    
 
     renderJobCards() {
         return this.filteredAchievedJobs.map(job => `
@@ -86,70 +67,73 @@ class AchievedJobsComponent {
     }
 
     addEventListeners() {
-        // Handle navigation to Pending Jobs
-        document.getElementById('pending-btn').addEventListener('click', async () => {
-            const mainComponent = new MainComponent();
-            await mainComponent.fetchJobs();
-            document.getElementById('app').innerHTML = mainComponent.render();
-            mainComponent.addEventListeners();
-        });
+        const pendingBtn = document.getElementById('pending-btn');
+        if (pendingBtn) {
+            pendingBtn.addEventListener('click', async () => {
+                const mainComponent = new MainComponent();
+                await mainComponent.fetchJobs();
+                document.getElementById('app').innerHTML = mainComponent.render();
+                mainComponent.addEventListeners();
+            });
+        }
 
-        // Handle navigation to Declined Jobs
-        document.getElementById('declined-btn').addEventListener('click', async () => {
-            const declinedJobsComponent = new DeclinedJobsComponent();
-            await declinedJobsComponent.fetchDeclinedJobs();
-            document.getElementById('app').innerHTML = declinedJobsComponent.render();
-            declinedJobsComponent.addEventListeners();
-        });
+        const declinedBtn = document.getElementById('declined-btn');
+        if (declinedBtn) {
+            declinedBtn.addEventListener('click', async () => {
+                const declinedJobsComponent = new DeclinedJobsComponent();
+                await declinedJobsComponent.fetchDeclinedJobs();
+                document.getElementById('app').innerHTML = declinedJobsComponent.render();
+                declinedJobsComponent.addEventListeners();
+            });
+        }
 
-        // Handle navigation to About page
-        document.getElementById('about-btn').addEventListener('click', async () => {
-            const aboutComponent = new AboutComponent();
-            await aboutComponent.fetchUserInfo();
-            document.getElementById('app').innerHTML = aboutComponent.render();
-            aboutComponent.addEventListeners();
-        });
+        const aboutBtn = document.getElementById('about-btn');
+        if (aboutBtn) {
+            aboutBtn.addEventListener('click', async () => {
+                const aboutComponent = new AboutComponent();
+                await aboutComponent.fetchUserInfo();
+                document.getElementById('app').innerHTML = aboutComponent.render();
+                aboutComponent.addEventListeners();
+            });
+        }
 
-        // Toggle search options
-        document.getElementById('toggle-search-btn').addEventListener('click', () => {
-            const searchOptions = document.getElementById('search-options');
-            this.showSearchOptions = !this.showSearchOptions;
-            searchOptions.style.display = this.showSearchOptions ? 'block' : 'none';
-        });
+        const toggleSearchBtn = document.getElementById('toggle-search-btn');
+        if (toggleSearchBtn) {
+            toggleSearchBtn.addEventListener('click', () => {
+                const searchOptions = document.getElementById('search-options');
+                this.showSearchOptions = !this.showSearchOptions;
+                searchOptions.style.display = this.showSearchOptions ? 'block' : 'none';
+            });
+        }
 
-        // Search jobs
-        document.getElementById('search-btn').addEventListener('click', () => {
-            this.filterJobs();
-        });
+        const searchBtn = document.getElementById('search-btn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', () => {
+                this.filterJobs();
+            });
+        }
 
-        // Attach event listeners to job cards
         this.attachCardEventListeners();
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (event) => {
-            const dropdowns = document.querySelectorAll('.dropdown-menu');
-            dropdowns.forEach(dropdown => {
-                if (dropdown.style.display === 'block' && !dropdown.contains(event.target)) {
-                    dropdown.style.display = 'none';
+        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+        if (confirmDeleteBtn) {
+            confirmDeleteBtn.addEventListener('click', async () => {
+                if (this.selectedJobId) {
+                    await this.deleteJob(this.selectedJobId);
+                    $('#deleteJobModal').modal('hide');
                 }
             });
-        });
+        }
 
-        // Handle delete job confirmation
-        document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
-            if (this.selectedJobId) {
-                await this.deleteJob(this.selectedJobId);
-                $('#deleteJobModal').modal('hide');
-            }
-        });
-
-        // Handle logout
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            localStorage.removeItem('token');
-            const loginComponent = new LoginComponent();
-            document.getElementById('app').innerHTML = loginComponent.render();
-            attachFormHandlers();
-        });
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('token');
+                const loginComponent = new LoginComponent();
+                document.getElementById('app').innerHTML = loginComponent.render();
+                attachFormHandlers();
+            });
+        }
     }
 
     attachCardEventListeners() {
@@ -229,7 +213,6 @@ class AchievedJobsComponent {
                 throw new Error(errorData.msg || 'Failed to delete job');
             }
 
-            // Remove job from local list and update UI
             this.achievedJobs = this.achievedJobs.filter(job => job._id !== jobId);
             this.filteredAchievedJobs = this.filteredAchievedJobs.filter(job => job._id !== jobId);
             document.querySelector(`.card[data-id="${jobId}"]`).remove();
@@ -245,19 +228,15 @@ class AchievedJobsComponent {
         const searchEndDate = document.getElementById('search-end-date').value;
 
         this.filteredAchievedJobs = this.achievedJobs.filter(job => {
-            const jobNameMatch = job.company.toLowerCase().includes(searchName);
-            const jobTitleMatch = job.title.toLowerCase().includes(searchName);
-
+            const jobNameMatch = job.company.toLowerCase().includes(searchName) || job.title.toLowerCase().includes(searchName);
             const jobDate = new Date(job.dateApplied);
             const startDate = searchStartDate ? new Date(searchStartDate) : null;
             const endDate = searchEndDate ? new Date(searchEndDate) : null;
-
             const jobDateMatch = (!startDate || jobDate >= startDate) && (!endDate || jobDate <= endDate);
-
-            return (jobNameMatch || jobTitleMatch) && jobDateMatch;
+            return jobNameMatch && jobDateMatch;
         });
 
-        document.getElementById('job-list').innerHTML = this.renderJobCards();
+        document.getElementById('achieved-job-list').innerHTML = this.renderJobCards();
         this.attachCardEventListeners();
     }
 }

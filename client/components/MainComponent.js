@@ -31,14 +31,15 @@ class MainComponent {
         const jobCards = this.renderJobCards();
         const deleteJobModal = this.renderDeleteJobModal();
         const addJobComponent = new AddJobComponent();
-    
+
         return `
         <div>
             ${headerComponent.render()}
             <div class="container mt-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3>Pending Jobs</h3>
-                    <button class="btn btn-primary discord-btn" id="add-job-btn" data-toggle="modal" data-target="#addJobModal">Add Job</button>
+                  <button class="btn btn-primary discord-btn" id="add-job-btn" data-toggle="modal" data-target="#addJobModal">Add Job</button>
+
                 </div>
                 <div class="mb-4">
                     <button class="btn btn-secondary discord-btn" id="toggle-search-btn">Toggle Search Options</button>
@@ -67,11 +68,12 @@ class MainComponent {
                         <a class="dropdown-item" id="sort-oldest">Oldest</a>
                     </div>
                 </div>
-                <div id="job-list-container" style="max-height: 70vh; overflow-y: auto;">
-                    <div id="job-list" class="row">
-                        ${jobCards}
-                    </div>
-                </div>
+<div id="job-list-container" class="job-list-container"> <!-- Apply shared styles -->
+    <div id="job-list" class="row job-list"> <!-- Ensure job list takes full width -->
+        ${jobCards}
+    </div>
+</div>
+
             </div>
             ${deleteJobModal}
             ${addJobComponent.render()}
@@ -79,7 +81,6 @@ class MainComponent {
         </div>
         `;
     }
-    
 
     renderJobCards() {
         return this.filteredJobs.map(job => {
@@ -125,16 +126,6 @@ class MainComponent {
 
         const addJobComponent = new AddJobComponent();
         addJobComponent.addEventListeners();
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (event) => {
-            const dropdowns = document.querySelectorAll('.dropdown-menu');
-            dropdowns.forEach(dropdown => {
-                if (dropdown.style.display === 'block' && !dropdown.contains(event.target)) {
-                    dropdown.style.display = 'none';
-                }
-            });
-        });
     }
 
     attachCardEventListeners() {
@@ -239,7 +230,6 @@ class MainComponent {
                 throw new Error(errorData.msg || 'Failed to delete job');
             }
 
-            // Remove job from local list and update UI
             this.jobs = this.jobs.filter(job => job._id !== jobId);
             document.querySelector(`.card[data-id="${jobId}"]`).remove();
         } catch (error) {
@@ -263,7 +253,6 @@ class MainComponent {
                 throw new Error(errorData.msg || 'Failed to decline job');
             }
 
-            // Remove job from local list and update UI
             this.jobs = this.jobs.filter(job => job._id !== jobId);
             document.querySelector(`.card[data-id="${jobId}"]`).remove();
         } catch (error) {
@@ -287,7 +276,6 @@ class MainComponent {
                 throw new Error(errorData.msg || 'Failed to achieve job');
             }
 
-            // Remove job from local list and update UI
             this.jobs = this.jobs.filter(job => job._id !== jobId);
             document.querySelector(`.card[data-id="${jobId}"]`).remove();
         } catch (error) {

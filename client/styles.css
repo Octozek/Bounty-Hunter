@@ -1,8 +1,3 @@
-body {
-    overflow: hidden; /* Prevent the body from scrolling */
-}
-
-
 /* ========== Global Styles ========== */
 body.bg-discord-dark {
     background-color: #36393f;
@@ -10,14 +5,18 @@ body.bg-discord-dark {
     font-family: 'Roboto', sans-serif;
 }
 
-/* ========== Password Styles ========== */
+/* Prevent scrolling on the body */
+body {
+    overflow: hidden;
+}
 
+/* ========== Password Styles ========== */
 .password-wrapper {
     position: relative;
 }
 
 .password-wrapper input {
-    padding-right: 40px; /* Ensure there's room for the icon */
+    padding-right: 40px;
 }
 
 .toggle-password {
@@ -30,34 +29,34 @@ body.bg-discord-dark {
     font-size: 20px;
 }
 
-
 /* ========== Header Styles ========== */
 header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 20px; /* Increase padding for a larger header */
+    padding: 20px;
     background-color: #2f3136;
     position: relative;
-    height: 150px; /* Increased height to avoid overlap */
+    height: 150px;
 }
 
 header h2 {
-    font-size: 28px; /* Slightly larger font size */
-    color: #ffffff;
+    font-size: 48px; /* Adjust the size to make it bigger */
+    font-weight: bold; /* Ensure it stands out */
+    color: #ffffff; /* Keep the white color for contrast */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: Add a subtle shadow for depth */
     margin: 0;
     text-align: left;
     position: absolute;
-    top: 10px; /* Position above the buttons */
+    top: 10px;
     left: 20px;
 }
 
-/* ========== Button Styles ========== */
 header nav {
     display: flex;
     justify-content: center;
     position: absolute;
-    bottom: 10px; /* Adjusted bottom position to prevent overlap */
+    bottom: 10px;
     left: 0;
     right: 0;
     padding: 0 20px;
@@ -81,28 +80,53 @@ header nav button:hover {
     background-color: #7289da;
 }
 
-
-#your-scrollable-container {
-    overflow-y: auto; /* Allow vertical scrolling */
-    max-height: 100vh; /* Ensure it doesn't go beyond the viewport height */
+/* ========== Button Styles ========== */
+button {
+    background-color: #7289da;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Remove focus outline and shadow */
+button:focus {
+    outline: none;
+    box-shadow: none;
+}
 
-/* ========== Settings Icon Styles ========== */
+/* Hover and active effects */
+button:hover {
+    background-color: #5b6fb2;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+}
+
+button:active {
+    background-color: #4c59a2;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.1s ease;
+}
+
+/* ========== Icon Button (Settings) ========== */
 .btn-icon {
     position: absolute;
-    top: 10px; /* Adjusted top position */
+    top: 10px;
     right: 10px;
     background-color: transparent;
     border: none;
     color: #ffffff;
-    font-size: 64px; /* Doubled the icon size */
+    font-size: 64px;
     cursor: pointer;
     padding: 0;
 }
 
 .btn-icon i {
-    font-size: inherit; /* Inherit the size from the parent */
+    font-size: inherit;
 }
 
 /* ========== Dropdown Menu Styles ========== */
@@ -127,7 +151,6 @@ header nav button:hover {
     color: #b9bbbe;
     padding: 8px 15px;
     font-size: 14px;
-    text-align: left;
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -136,7 +159,6 @@ header nav button:hover {
     color: #ffffff;
 }
 
-/* Divider for better separation between items */
 .dropdown-divider {
     height: 1px;
     margin: 5px 0;
@@ -171,10 +193,6 @@ header nav button:hover {
     margin-bottom: 15px;
 }
 
-#search-options label {
-    font-weight: bold;
-}
-
 #search-options .form-control {
     background-color: #3c3f44;
     color: #ffffff;
@@ -182,69 +200,54 @@ header nav button:hover {
 }
 
 #search-options .form-control:focus {
-    background-color: #3c3f44;
-    color: #ffffff;
     border: 1px solid #7289da;
     box-shadow: none;
 }
 
 /* ========== Job List Styles ========== */
-#job-list-container {
-    position: relative;
-    max-height: 70vh;
+.job-list-container {
+    max-height: 60vh;
     overflow-y: auto;
-    margin: 0 auto; /* Center the container */
-    padding-right: 8px; /* Space for scrollbar */
+    margin-bottom: 20px;
+    padding-bottom: 20px;
     width: 100%;
-    max-width: 620px; /* Adjust width to fit cards plus scrollbar */
+    box-sizing: border-box;
 }
 
-/* Custom Scrollbar for the job-list-container */
-#job-list-container::-webkit-scrollbar {
-    width: 8px; /* Width of the scrollbar */
+.job-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
 }
 
-#job-list-container::-webkit-scrollbar-thumb {
-    background-color: #4f545c; /* Color of the scrollbar thumb */
-    border-radius: 10px; /* Rounded edges */
-    border: 2px solid transparent;
-    background-clip: content-box;
+/* Custom Scrollbar */
+.job-list-container::-webkit-scrollbar {
+    width: 8px;
 }
 
-#job-list-container::-webkit-scrollbar-track {
-    background-color: transparent; /* Make the track transparent */
+.job-list-container::-webkit-scrollbar-thumb {
+    background-color: #7289da;
+    border-radius: 10px;
 }
 
-/* Job Card Styles */
+.job-list-container::-webkit-scrollbar-track {
+    background-color: #2f3136;
+}
+
+/* Job Card Styling */
 .card {
     background-color: #2f3136 !important;
     border: none;
     border-radius: 8px;
     margin-bottom: 20px;
     width: 100%;
-    max-width: 600px; /* Ensure card width fits within the container */
-    margin: 0 auto; /* Center the cards */
-    box-sizing: border-box; /* Include padding in width */
-}
-
-#job-list-container {
-    max-height: 70vh; /* Limit the height to a percentage of the viewport height */
-    overflow-y: auto; /* Enable vertical scrolling inside the box */
-    padding-right: 8px; /* Space for the scrollbar */
-    padding-bottom: 20px; /* Add padding at the bottom */
-    width: 100%; /* Make it take full width of the container */
-    box-sizing: border-box; /* Ensure padding is included in the width calculation */
-}
-
-
-
-.job-card {
-    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
     box-sizing: border-box;
 }
 
 /* ========== About Page Styles ========== */
-
 .container.mt-4 {
     background-color: #2f3136;
     border-radius: 8px;
@@ -255,13 +258,6 @@ header nav button:hover {
     margin: 20px auto;
 }
 
-.container.mt-4 h3 {
-    color: #ffffff;
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-/* Flexbox for labels, links, and buttons */
 .container.mt-4 p {
     font-size: 16px;
     margin-bottom: 15px;
@@ -274,16 +270,9 @@ header nav button:hover {
 .container.mt-4 p strong {
     color: #7289da;
     font-weight: 600;
-    width: 120px; /* Fixed width for labels */
+    width: 120px;
 }
 
-/* Divider between sections */
-.section-divider {
-    border-bottom: 1px solid #4f545c; /* Line between sections */
-    margin: 10px 0; /* Add space above and below the line */
-}
-
-/* Flex container for the link and copy button */
 .link-container {
     display: flex;
     justify-content: space-between;
@@ -291,13 +280,12 @@ header nav button:hover {
     flex: 1;
 }
 
-/* Links styling */
 .container.mt-4 p a {
     color: #ffffff;
     text-decoration: none;
     transition: color 0.3s ease;
     word-break: break-word;
-    flex: 1; /* Let the link take up available space */
+    flex: 1;
 }
 
 .container.mt-4 p a:hover {
@@ -315,15 +303,13 @@ header nav button:hover {
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    white-space: nowrap; /* Prevents text from wrapping */
 }
 
 .copy-btn:hover {
     background-color: #5b6eae;
 }
 
-
-/* ========== Resume Modal Specific Styles ========== */
+/* ========== Resume Modal Styles ========== */
 #resumeModal .modal-content {
     background-color: #2f3136 !important;
     color: #ffffff !important;
@@ -333,44 +319,17 @@ header nav button:hover {
     overflow-y: auto;
 }
 
-#resumeModal .modal-header {
-    border-bottom: 1px solid #4f545c;
-}
-
 #resumeModal .modal-body {
-    white-space: pre-wrap; /* Preserves whitespace and line breaks */
-    color: #ffffff !important; /* Ensure text is white */
+    white-space: pre-wrap;
     background-color: #3c3f44;
-    padding: 20px; /* Increase padding for better readability */
+    padding: 20px;
     border-radius: 8px;
     border: 1px solid #4f545c;
-    font-family: Arial, sans-serif; /* Change font to Arial for better readability */
-    font-size: 16px; /* Increase font size */
-    line-height: 1.5; /* Adjust line height for better spacing */
-}
-
-#resumeModal .modal-body pre {
-    color: #ffffff !important; /* Ensure text inside <pre> is white */
-    font-family: Arial, sans-serif; /* Match the font with modal body */
-    font-size: 16px; /* Increase font size inside <pre> */
-}
-
-#resumeModal .modal-footer {
-    border-top: 1px solid #4f545c;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
 }
 
 #resumeModal .close {
     color: #ffffff;
 }
-
-/* Adjust modal for mobile */
-@media (max-width: 576px) {
-    #resumeModal .modal-dialog {
-        margin: 10px;
-    }
-
-    #resumeModal .modal-content {
-        max-height: 70vh;
-    }
-}
-

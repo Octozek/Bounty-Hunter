@@ -19,7 +19,7 @@ class DeclinedJobsComponent {
         this.declinedJobs = await response.json();
         this.filteredDeclinedJobs = this.declinedJobs;
     }
-    
+
     render() {
         const headerComponent = new HeaderComponent('declined');
         const jobCards = this.renderJobCards();
@@ -32,28 +32,10 @@ class DeclinedJobsComponent {
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3>Declined Jobs</h3>
                     </div>
-                    <div class="mb-4">
-                        <button class="btn btn-secondary discord-btn" id="toggle-search-btn">Toggle Search Options</button>
-                        <div id="search-options" class="p-3 rounded" style="display: none; background-color: #2f3136; border: 1px solid #4f545c;">
-                            <div class="form-group">
-                                <label for="search-name">Search by Name:</label>
-                                <input type="text" id="search-name" class="form-control mb-3" placeholder="Enter company or job title">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="search-start-date">Start Date:</label>
-                                    <input type="date" id="search-start-date" class="form-control">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="search-end-date">End Date:</label>
-                                    <input type="date" id="search-end-date" class="form-control">
-                                </div>
-                            </div>
-                            <button class="btn btn-primary discord-btn" id="search-btn">Search</button>
+                    <div id="job-list-container" class="job-list-container"> <!-- Ensure shared styling for container -->
+                        <div id="declined-job-list" class="job-list"> <!-- Job list styles for full-width display -->
+                            ${jobCards}
                         </div>
-                    </div>
-                    <div id="job-list-container" class="row">
-                        ${jobCards}
                     </div>
                 </div>
                 ${deleteJobModal}
@@ -61,7 +43,6 @@ class DeclinedJobsComponent {
             </div>
         `;
     }
-    
 
     renderJobCards() {
         return this.filteredDeclinedJobs.map(job => `
@@ -86,68 +67,73 @@ class DeclinedJobsComponent {
     }
 
     addEventListeners() {
-        // Header buttons
-        document.getElementById('pending-btn').addEventListener('click', async () => {
-            const mainComponent = new MainComponent();
-            await mainComponent.fetchJobs();
-            document.getElementById('app').innerHTML = mainComponent.render();
-            mainComponent.addEventListeners();
-        });
+        const pendingBtn = document.getElementById('pending-btn');
+        if (pendingBtn) {
+            pendingBtn.addEventListener('click', async () => {
+                const mainComponent = new MainComponent();
+                await mainComponent.fetchJobs();
+                document.getElementById('app').innerHTML = mainComponent.render();
+                mainComponent.addEventListeners();
+            });
+        }
 
-        document.getElementById('achieved-btn').addEventListener('click', async () => {
-            const achievedJobsComponent = new AchievedJobsComponent();
-            await achievedJobsComponent.fetchAchievedJobs();
-            document.getElementById('app').innerHTML = achievedJobsComponent.render();
-            achievedJobsComponent.addEventListeners();
-        });
+        const achievedBtn = document.getElementById('achieved-btn');
+        if (achievedBtn) {
+            achievedBtn.addEventListener('click', async () => {
+                const achievedJobsComponent = new AchievedJobsComponent();
+                await achievedJobsComponent.fetchAchievedJobs();
+                document.getElementById('app').innerHTML = achievedJobsComponent.render();
+                achievedJobsComponent.addEventListeners();
+            });
+        }
 
-        document.getElementById('about-btn').addEventListener('click', async () => {
-            const aboutComponent = new AboutComponent();
-            await aboutComponent.fetchUserInfo();
-            document.getElementById('app').innerHTML = aboutComponent.render();
-            aboutComponent.addEventListeners();
-        });
+        const aboutBtn = document.getElementById('about-btn');
+        if (aboutBtn) {
+            aboutBtn.addEventListener('click', async () => {
+                const aboutComponent = new AboutComponent();
+                await aboutComponent.fetchUserInfo();
+                document.getElementById('app').innerHTML = aboutComponent.render();
+                aboutComponent.addEventListeners();
+            });
+        }
 
-        // Toggle search options
-        document.getElementById('toggle-search-btn').addEventListener('click', () => {
-            const searchOptions = document.getElementById('search-options');
-            this.showSearchOptions = !this.showSearchOptions;
-            searchOptions.style.display = this.showSearchOptions ? 'block' : 'none';
-        });
+        const toggleSearchBtn = document.getElementById('toggle-search-btn');
+        if (toggleSearchBtn) {
+            toggleSearchBtn.addEventListener('click', () => {
+                const searchOptions = document.getElementById('search-options');
+                this.showSearchOptions = !this.showSearchOptions;
+                searchOptions.style.display = this.showSearchOptions ? 'block' : 'none';
+            });
+        }
 
-        // Search jobs
-        document.getElementById('search-btn').addEventListener('click', () => {
-            this.filterJobs();
-        });
+        const searchBtn = document.getElementById('search-btn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', () => {
+                this.filterJobs();
+            });
+        }
 
-        // Attach card event listeners
         this.attachCardEventListeners();
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (event) => {
-            const dropdowns = document.querySelectorAll('.dropdown-menu');
-            dropdowns.forEach(dropdown => {
-                if (dropdown.style.display === 'block' && !dropdown.contains(event.target)) {
-                    dropdown.style.display = 'none';
+        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+        if (confirmDeleteBtn) {
+            confirmDeleteBtn.addEventListener('click', async () => {
+                if (this.selectedJobId) {
+                    await this.deleteJob(this.selectedJobId);
+                    $('#deleteJobModal').modal('hide');
                 }
             });
-        });
+        }
 
-        // Confirm delete job
-        document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
-            if (this.selectedJobId) {
-                await this.deleteJob(this.selectedJobId);
-                $('#deleteJobModal').modal('hide');
-            }
-        });
-
-        // Logout
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            localStorage.removeItem('token');
-            const loginComponent = new LoginComponent();
-            document.getElementById('app').innerHTML = loginComponent.render();
-            attachFormHandlers();
-        });
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('token');
+                const loginComponent = new LoginComponent();
+                document.getElementById('app').innerHTML = loginComponent.render();
+                attachFormHandlers();
+            });
+        }
     }
 
     attachCardEventListeners() {
@@ -227,7 +213,6 @@ class DeclinedJobsComponent {
                 throw new Error(errorData.msg || 'Failed to delete job');
             }
     
-            // Remove job from local list and update UI
             this.declinedJobs = this.declinedJobs.filter(job => job._id !== jobId);
             this.filteredDeclinedJobs = this.filteredDeclinedJobs.filter(job => job._id !== jobId);
             document.querySelector(`.card[data-id="${jobId}"]`).remove();
@@ -251,7 +236,7 @@ class DeclinedJobsComponent {
             return jobNameMatch && jobDateMatch;
         });
 
-        document.getElementById('job-list').innerHTML = this.renderJobCards();
+        document.getElementById('declined-job-list').innerHTML = this.renderJobCards();
         this.attachCardEventListeners();
     }
 }
